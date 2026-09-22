@@ -7,6 +7,7 @@
     "test": "node --test \"test/*.test.js\"",
     "serve": "node scripts/serve.mjs",
     "sync:watch": "node scripts/sync-watch.mjs",
-    "build:watch": "node scripts/build-watch.mjs"
+    "build:watch": "node scripts/build-watch.mjs",
+    "build:release": "node scripts/build-watch.mjs release"
   }
 }

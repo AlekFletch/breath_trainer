@@ -1,4 +1,5 @@
-// Синхронизирует общий код и собирает debug-пакет часов тем же hvigor, что DevEco Studio.
+// Синхронизирует общий код и собирает пакет часов тем же hvigor, что DevEco Studio.
+// Без аргументов — debug-пакет .hap; с аргументом release — подписанный релизный .app для AppGallery.
 // Путь к DevEco Studio можно переопределить переменной DEVECO_STUDIO.
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
@@ -11,15 +12,16 @@ const jbr = join(studio, 'jbr');
 
 syncWatch(root);
 
+const release = process.argv[2] === 'release';
+const task = release
+  ? ['--mode', 'project', '-p', 'product=release', '-p', 'buildMode=release', 'assembleApp']
+  : ['--mode', 'module', '-p', 'module=entry@default', '-p', 'product=default', '-p', 'buildMode=debug', 'assembleHap'];
+
 const result = spawnSync(
   join(studio, 'tools', 'node', 'node.exe'),
   [
     join(studio, 'tools', 'hvigor', 'bin', 'hvigorw.js'),
-    '--mode', 'module',
-    '-p', 'module=entry@default',
-    '-p', 'product=default',
-    '-p', 'buildMode=debug',
-    'assembleHap',
+    ...task,
     '--no-daemon'
   ],
   {

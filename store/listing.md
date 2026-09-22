@@ -1,22 +1,22 @@
 # Материалы для AppGallery
 
-- Пакет: `com.konnov.breathtrainer`, версия 1.0.0 (1000000)
+- Пакет: `com.konnov.breathtrainer`, версия 1.0.1 (1000001)
 - Устройство: HUAWEI WATCH FIT 4 Pro и другие часы Lite Wearable с прямоугольным экраном 408 × 480
 - Категория: Здоровье и фитнес
 - Цена: бесплатно; без рекламы, без встроенных покупок, без сбора данных
 - Возрастной рейтинг: 3+
 - Политика конфиденциальности: https://alekfletch.github.io/breath_trainer/privacy/
 - Разработчик: AKdev
-- Иконка магазина: `store/icon-216.png` (216 × 216)
+- Иконка магазина: `store/icon-216.png` (216 × 216, круг на прозрачном фоне — совпадает с иконкой пакета)
 - Скриншоты: `store/screenshots/<язык>/` (408 × 480)
 
-Название в магазине — «Дыхание: тренажёр» / «Breath Trainer»: короткие «Дыхание» и «Breathe» на часах остаются как есть, но в магазине такие общие названия скорее всего заняты.
+AGC требует, чтобы название в магазине совпадало с названием в пакете (`resources/*/element/string.json`, MainAbility_label): английское — Breath Trainer, остальные — как на часах.
 
 ---
 
 ## Русский (ru)
 
-**Название:** Дыхание: тренажёр
+**Название:** Дыхание
 
 **Краткое описание:** Дыхательные упражнения на часах: шарик, вибрация в такт, статистика.
 
@@ -34,7 +34,7 @@
 
 Без рекламы, без регистрации, без интернета. Приложение не собирает никаких данных.
 
-**Что нового (1.0.0):** Первая версия.
+**Что нового (1.0.1):** Первая версия.
 
 ---
 
@@ -58,13 +58,13 @@ Calm breathing right on your wrist. The ball grows as you inhale and shrinks as 
 
 No ads, no sign-up, no internet. The app collects no data.
 
-**What's new (1.0.0):** First release.
+**What's new (1.0.1):** First release.
 
 ---
 
 ## Español (es)
 
-**Nombre:** Respiración: entrenador
+**Nombre:** Respirar
 
 **Descripción breve:** Ejercicios de respiración en tu reloj: bola guía, vibración y resultados.
 
@@ -82,13 +82,13 @@ Respiración tranquila en tu muñeca. La bola crece al inhalar y se encoge al ex
 
 Sin anuncios, sin registro, sin internet. La app no recopila ningún dato.
 
-**Novedades (1.0.0):** Primera versión.
+**Novedades (1.0.1):** Primera versión.
 
 ---
 
 ## Deutsch (de)
 
-**Name:** Atemtrainer
+**Name:** Atmen
 
 **Kurzbeschreibung:** Atemübungen auf der Uhr: Leitkugel, Vibration im Takt, Ergebnisse.
 
@@ -106,13 +106,13 @@ Ruhiges Atmen direkt am Handgelenk. Die Kugel wächst beim Einatmen und schrumpf
 
 Keine Werbung, keine Anmeldung, kein Internet. Die App erhebt keine Daten.
 
-**Neu in 1.0.0:** Erste Version.
+**Neu in 1.0.1:** Erste Version.
 
 ---
 
 ## Français (fr)
 
-**Nom :** Respiration : coach
+**Nom :** Respirer
 
 **Description courte :** Exercices de respiration sur votre montre : bulle guide, vibrations, bilan.
 
@@ -130,13 +130,13 @@ Une respiration calme, directement au poignet. La bulle grandit à l'inspiration
 
 Sans publicité, sans inscription, sans internet. L'application ne collecte aucune donnée.
 
-**Nouveautés (1.0.0) :** Première version.
+**Nouveautés (1.0.1) :** Première version.
 
 ---
 
 ## 中文 (zh)
 
-**名称：** 呼吸训练
+**名称：** 呼吸
 
 **一句话简介：** 手表上的呼吸练习：引导圆球、节奏振动、练习结果。
 
@@ -154,4 +154,4 @@ Sans publicité, sans inscription, sans internet. L'application ne collecte aucu
 
 无广告、无需注册、无需联网。应用不收集任何数据。
 
-**新版本特性（1.0.0）：** 首个版本。
+**新版本特性（1.0.1）：** 首个版本。
