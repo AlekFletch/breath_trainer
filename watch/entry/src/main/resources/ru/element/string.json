@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "MainAbility_desc",
+      "value": "Дыхательный тренажёр"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Дыхание"
+    }
+  ]
+}

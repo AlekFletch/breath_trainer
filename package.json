@@ -1,0 +1,12 @@
+{
+  "name": "fit4pro-breathing",
+  "private": true,
+  "type": "module",
+  "description": "Дыхательный тренажёр для HUAWEI WATCH FIT 4 Pro: движок, браузерный прототип, проект Lite Wearable",
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "serve": "node scripts/serve.mjs",
+    "sync:watch": "node scripts/sync-watch.mjs",
+    "build:watch": "node scripts/build-watch.mjs"
+  }
+}

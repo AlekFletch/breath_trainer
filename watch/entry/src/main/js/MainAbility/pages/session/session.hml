@@ -1,0 +1,20 @@
+<stack class="stage" onclick="onTap" onswipe="onSwipe">
+    <div class="ball" show="{{running}}" style="width: {{ballSize}}; height: {{ballSize}}; border-radius: {{ballRadius}}; left: {{ballLeft}}; top: {{ballTop}}; background-color: {{ballColor}};"></div>
+    <text class="phase" show="{{running}}">{{phaseLabel}}</text>
+    <text class="time" show="{{running}}">{{timeLabel}}</text>
+    <text class="counter" show="{{counting}}">{{counter}}</text>
+    <div class="pause-bar pause-left" show="{{paused}}"></div>
+    <div class="pause-bar pause-right" show="{{paused}}"></div>
+    <progress class="progress" show="{{running}}" type="horizontal" percent="{{percent}}"></progress>
+    <div class="stats" show="{{done}}">
+        <text class="stats-title">{{doneLabel}}</text>
+        <div class="stats-card">
+            <text class="stats-value">{{statsTime}}</text>
+            <text class="stats-label">{{statsTimeLabel}}</text>
+            <div class="stats-divider"></div>
+            <text class="stats-value">{{statsCycles}}</text>
+            <text class="stats-label">{{statsCyclesLabel}}</text>
+        </div>
+        <text class="stats-hint">{{exitHint}}</text>
+    </div>
+</stack>

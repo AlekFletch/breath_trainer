@@ -1,0 +1,61 @@
+<div class="page" onswipe="onSwipe">
+    <div class="head">
+        <div class="back" onclick="goBack">
+            <text class="back-text">{{backGlyph}}</text>
+        </div>
+        <text class="title">{{title}}</text>
+    </div>
+    <list class="list" ref="list">
+        <list-item class="item" onclick="openLanguage">
+            <text class="label">{{languageLabel}}</text>
+            <text class="value">{{languageValue}}</text>
+        </list-item>
+        <list-item class="item">
+            <text class="label-wide">{{vibrationLabel}}</text>
+            <switch class="switch" checked="{{vibration}}" onchange="onVibrationChange"></switch>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{sessionLabel}}</text>
+            <div class="stepper">
+                <text class="step" onclick="sessionMinus">-</text>
+                <text class="number">{{sessionValue}}</text>
+                <text class="step" onclick="sessionPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="section">
+            <text class="section-text">{{customLabel}}</text>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{inhaleLabel}}</text>
+            <div class="stepper">
+                <text class="step" onclick="inhaleMinus">-</text>
+                <text class="number">{{inhaleValue}}</text>
+                <text class="step" onclick="inhalePlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{holdInLabel}}</text>
+            <div class="stepper">
+                <text class="step" onclick="holdInMinus">-</text>
+                <text class="number">{{holdInValue}}</text>
+                <text class="step" onclick="holdInPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{exhaleLabel}}</text>
+            <div class="stepper">
+                <text class="step" onclick="exhaleMinus">-</text>
+                <text class="number">{{exhaleValue}}</text>
+                <text class="step" onclick="exhalePlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{holdOutLabel}}</text>
+            <div class="stepper">
+                <text class="step" onclick="holdOutMinus">-</text>
+                <text class="number">{{holdOutValue}}</text>
+                <text class="step" onclick="holdOutPlus">+</text>
+            </div>
+        </list-item>
+    </list>
+</div>

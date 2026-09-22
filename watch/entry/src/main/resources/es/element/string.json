@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "MainAbility_desc",
+      "value": "Entrenador de respiración"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Respirar"
+    }
+  ]
+}

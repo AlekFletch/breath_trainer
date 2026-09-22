@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "description": "Исходники часов — CommonJS для webpack из ace-loader. Без этого файла действует \"type\": \"module\" из корневого package.json, webpack считает страницы ES-модулями и не подключает импорты общего кода.",
+  "type": "commonjs"
+}

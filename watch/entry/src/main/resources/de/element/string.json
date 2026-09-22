@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "MainAbility_desc",
+      "value": "Atemtrainer"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Atmen"
+    }
+  ]
+}

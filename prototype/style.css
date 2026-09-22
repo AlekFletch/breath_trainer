@@ -1,0 +1,257 @@
+:root {
+  color-scheme: dark;
+  --accent: #4fd1c5;
+  --panel: #1b1e26;
+  --muted: #9aa3b5;
+}
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: #121419;
+  color: #e8eaf0;
+  font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 32px 16px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Экран часов: точный размер 480 × 408 */
+.watch {
+  position: relative;
+  flex: none;
+  width: 480px;
+  height: 408px;
+  background: #000;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 0 0 12px #262932, 0 20px 60px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.view {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Главный экран */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.card {
+  background: var(--panel);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  padding: 12px 16px;
+  text-align: left;
+}
+.card.selected { border-color: var(--accent); }
+.card b { display: block; font-size: 24px; font-weight: 600; }
+.card span { color: var(--muted); font-size: 20px; }
+
+.row { display: flex; gap: 10px; }
+
+.secondary {
+  flex: 1;
+  height: 58px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--panel);
+  font-size: 20px;
+}
+
+.primary {
+  margin-top: auto;
+  height: 76px;
+  border: 0;
+  border-radius: 38px;
+  background: var(--accent);
+  color: #02110f;
+  font-size: 30px;
+  font-weight: 600;
+}
+.primary small { font-size: 20px; font-weight: 400; opacity: 0.7; margin-left: 8px; }
+
+/* Сессия */
+#view-session { padding: 0; cursor: pointer; }
+
+.ball {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 340px;
+  height: 340px;
+  margin: -170px 0 0 -170px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #b4fff6 0%, #3cc9bb 45%, #0d5a53 100%);
+  transform: scale(0.45);
+  transition: filter 0.8s;
+}
+.ball[data-phase='holdIn'] { filter: hue-rotate(25deg); }
+.ball[data-phase='exhale'] { filter: hue-rotate(80deg); }
+.ball[data-phase='holdOut'] { filter: hue-rotate(110deg) brightness(0.85); }
+.ball[data-phase='done'] { filter: saturate(0.3); }
+
+.top {
+  position: absolute;
+  top: 16px;
+  left: 26px;
+  right: 26px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 26px;
+}
+#time-left { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.counter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 76px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.paused {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 38px;
+  text-align: center;
+  font-size: 24px;
+  color: var(--muted);
+}
+
+.progress {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 16px;
+  height: 6px;
+  border-radius: 3px;
+  background: #23262e;
+  overflow: hidden;
+}
+#progress-fill { height: 100%; width: 0; background: var(--accent); }
+
+/* Настройки */
+.settings-head { display: flex; align-items: center; gap: 12px; font-size: 24px; }
+.back {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--panel);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.secondary.icon-button { flex: none; width: 58px; font-size: 26px; }
+
+/* Списки прокручиваются, как колёсиком на часах; затухание внизу подсказывает, что дальше есть ещё */
+.scroll {
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-bottom: 36px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+.section { margin: 14px 0 2px; color: var(--muted); font-size: 18px; }
+
+.switch { position: relative; flex: none; width: 52px; height: 30px; border-radius: 15px; background: #2c3039; transition: background 0.2s; }
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #8a92a3;
+  transition: transform 0.2s, background 0.2s;
+}
+.switch.on { background: #1f5c56; }
+.switch.on::after { transform: translateX(22px); background: var(--accent); }
+
+.setting { display: flex; align-items: center; height: 60px; gap: 10px; font-size: 22px; }
+.setting-link { width: 100%; padding: 0; border: 0; background: none; text-align: left; }
+.setting-link .value { width: auto; color: var(--muted); text-align: right; }
+.setting-link .chevron { width: 20px; color: var(--muted); font-size: 28px; text-align: center; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 1px solid #1c1f27;
+  background: none;
+  font-size: 24px;
+  text-align: left;
+}
+.option .sub { color: var(--muted); font-size: 18px; }
+.option .check { margin-left: auto; color: var(--accent); }
+.option.selected { color: var(--accent); }
+.setting .label { flex: 1; }
+.setting .value { width: 84px; text-align: center; font-variant-numeric: tabular-nums; }
+.setting button {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 26px;
+  background: var(--panel);
+  font-size: 28px;
+  line-height: 1;
+}
+
+/* Отладочная панель — вне экрана часов */
+.debug {
+  width: 300px;
+  max-width: 100%;
+  background: #1a1d24;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+}
+.debug h2 { margin: 0 0 4px; font-size: 18px; }
+.debug h3 { margin: 18px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.debug label { display: block; margin: 10px 0; }
+.debug input[type='range'], .debug select { display: block; width: 100%; margin-top: 4px; }
+.debug output { float: right; color: var(--accent); font-variant-numeric: tabular-nums; }
+.debug #back-button { width: 100%; padding: 8px; border: 1px solid #333844; border-radius: 10px; background: #22262f; }
+.hint { color: var(--muted); font-size: 12px; margin: 6px 0; }
+.mono, .log { font: 12px/1.5 ui-monospace, Consolas, monospace; }
+.log { height: 150px; margin: 8px 0 0; overflow: hidden; color: #c5cad6; white-space: pre; }
+
+.pulse-row { display: flex; align-items: center; gap: 12px; }
+.pulse-dot { width: 22px; height: 22px; border-radius: 50%; background: #2c3039; }
+.pulse-dot.short { animation: flash 140ms ease-out; }
+.pulse-dot.long { animation: flash 1000ms ease-out; }
+@keyframes flash {
+  from { background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+  to { background: #2c3039; box-shadow: none; }
+}

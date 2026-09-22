@@ -1,0 +1,14 @@
+node_modules/
+# DevEco Studio / hvigor
+watch/.hvigor/
+watch/.idea/
+watch/oh_modules/
+watch/local.properties
+watch/entry/build/
+watch/entry/.preview/
+# подпись: ключи и сертификаты хранятся вне репозитория
+*.p12
+*.p7b
+*.cer
+*.csr
+*.hap

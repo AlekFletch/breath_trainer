@@ -1,0 +1,114 @@
+/* Экран часов вертикальный: 408 × 480, содержимое — 360 px по центру. */
+.page {
+  width: 408px;
+  height: 480px;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000000;
+}
+.head {
+  width: 360px;
+  height: 56px;
+  margin-top: 24px;
+  flex-direction: row;
+  align-items: center;
+}
+.back {
+  width: 48px;
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+  background-color: #1b1e26;
+}
+.back-text {
+  width: 30px;
+  height: 36px;
+  font-size: 28px;
+  text-align: center;
+  color: #e8eaf0;
+}
+.title {
+  width: 298px;
+  height: 40px;
+  margin-left: 14px;
+  font-size: 26px;
+  color: #e8eaf0;
+}
+.list {
+  width: 360px;
+  height: 368px;
+  margin-top: 8px;
+}
+.item {
+  width: 360px;
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+}
+/* Пункт с «−/+»: подпись сверху, кнопки под ней — в одну строку по ширине 408 не помещаются */
+.item-step {
+  width: 360px;
+  height: 104px;
+  flex-direction: column;
+  justify-content: center;
+}
+.stepper {
+  width: 360px;
+  height: 56px;
+  margin-top: 4px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.section {
+  width: 360px;
+  height: 44px;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.section-text {
+  width: 360px;
+  height: 30px;
+  font-size: 20px;
+  color: #9aa3b5;
+}
+.label {
+  width: 150px;
+  height: 34px;
+  font-size: 22px;
+  color: #e8eaf0;
+}
+.label-wide {
+  width: 280px;
+  height: 34px;
+  font-size: 22px;
+  color: #e8eaf0;
+}
+.value {
+  width: 210px;
+  height: 34px;
+  font-size: 22px;
+  text-align: right;
+  color: #9aa3b5;
+}
+.switch {
+  width: 80px;
+  height: 44px;
+}
+.step {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: #1b1e26;
+  font-size: 28px;
+  text-align: center;
+  color: #e8eaf0;
+}
+.number {
+  width: 140px;
+  height: 34px;
+  font-size: 22px;
+  text-align: center;
+  color: #e8eaf0;
+}

@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "MainAbility_desc",
+      "value": "Exercices de respiration"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Respirer"
+    }
+  ]
+}

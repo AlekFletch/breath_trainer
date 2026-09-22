@@ -1,0 +1,45 @@
+<div class="page" onswipe="onSwipe">
+    <div class="head">
+        <div class="back" onclick="goBack">
+            <text class="back-text">{{backGlyph}}</text>
+        </div>
+        <text class="title">{{title}}</text>
+    </div>
+    <list class="list" ref="list">
+        <list-item class="item" onclick="pick0">
+            <text class="name" style="color: {{option0Color}};">{{option0Name}}</text>
+            <text class="sub">{{option0Sub}}</text>
+            <div class="dot" show="{{option0Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick1">
+            <text class="name" style="color: {{option1Color}};">{{option1Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option1Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick2">
+            <text class="name" style="color: {{option2Color}};">{{option2Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option2Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick3">
+            <text class="name" style="color: {{option3Color}};">{{option3Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option3Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick4">
+            <text class="name" style="color: {{option4Color}};">{{option4Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option4Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick5">
+            <text class="name" style="color: {{option5Color}};">{{option5Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option5Selected}}"></div>
+        </list-item>
+        <list-item class="item" onclick="pick6">
+            <text class="name" style="color: {{option6Color}};">{{option6Name}}</text>
+            <text class="sub"></text>
+            <div class="dot" show="{{option6Selected}}"></div>
+        </list-item>
+    </list>
+</div>

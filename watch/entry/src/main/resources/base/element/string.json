@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "Breathing trainer"
+    },
+    {
+      "name": "MainAbility_desc",
+      "value": "Breathing trainer"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Breathe"
+    }
+  ]
+}
