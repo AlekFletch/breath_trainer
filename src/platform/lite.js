@@ -5,6 +5,9 @@
 
 function noop() {}
 
+// Предел значения в @system.storage на Lite Wearable (ключ — 32 символа). Больше — set падает с fail.
+export var STORAGE_MAX_VALUE = 128;
+
 // modules: { vibrator, brightness, storage, configuration } — @system.vibrator, @system.brightness, ...
 export function createLitePlatform(modules) {
   var vibrator = modules.vibrator;
@@ -78,6 +81,10 @@ export function createLitePlatform(modules) {
     // done(ok) необязателен: страница «Сохранить» показывает по нему, записалось ли на самом деле.
     save: function (key, value, done) {
       var json = JSON.stringify(value);
+      if (json.length > STORAGE_MAX_VALUE) {
+        if (done) done(false);
+        return;
+      }
       function attempt(retriesLeft) {
         storage.set({
           key: key,

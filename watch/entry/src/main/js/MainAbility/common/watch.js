@@ -2,7 +2,7 @@
 // Страницы сменяют друг друга через router.replace (стека страниц на Lite нет), поэтому настройки
 // передаются в параметрах перехода и сохраняются в storage.
 
-import { SETTINGS_KEY, defaultSettings, normalizeSettings } from './core/settings.js';
+import { SETTINGS_KEY, defaultSettings, encodeSettings, normalizeSettings } from './core/settings.js';
 import { createTranslator, resolveLanguage } from './core/i18n.js';
 
 // Сначала — настройки из параметров перехода или значения по умолчанию, затем — из хранилища, если перехода не было.
@@ -19,7 +19,7 @@ export function loadSettings(vm, platform, apply) {
 
 // done(ok) необязателен — см. platform.save.
 export function saveSettings(platform, settings, done) {
-  platform.save(SETTINGS_KEY, settings, done);
+  platform.save(SETTINGS_KEY, encodeSettings(settings), done);
 }
 
 export function translatorFor(platform, settings) {

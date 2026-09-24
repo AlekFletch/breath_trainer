@@ -91,3 +91,13 @@ test('stepSetting: правка фаз выбирает «Своё», пусто
   assert.equal(stepSetting(zero, 'holdIn', -1).custom.holdIn, 0);
   assert.equal(stepSetting(defaultSettings(), 'unknown', 1).presetId, '478');
 });
+
+test('компактная запись для хранилища часов: короче 128 байт, обратимая, ломаная — по умолчанию', async () => {
+  const { encodeSettings, normalizeSettings, defaultSettings, updateSettings } = await import('../src/core/settings.js');
+  let s = updateSettings(defaultSettings(), { language: 'zh', vibration: false, sessionSec: 1200, presetId: 'custom', custom: { inhale: 60, holdIn: 60, exhale: 60, holdOut: 60 } });
+  const text = encodeSettings(s);
+  assert.ok(JSON.stringify(text).length <= 128, text);
+  assert.deepEqual(normalizeSettings(text), s);
+  assert.deepEqual(normalizeSettings('b1;bad;x'), defaultSettings());
+  assert.deepEqual(normalizeSettings(encodeSettings(defaultSettings())), defaultSettings());
+});

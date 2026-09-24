@@ -136,3 +136,11 @@ test('save сообщает результат записи: успех, усп�
   createLitePlatform(fakeModules({ setFailTimes: 2 })).save('k', 1, (ok) => results.push(ok));
   assert.deepEqual(results, [true, true, false]);
 });
+
+test('save отказывает сразу, если значение длиннее предела хранилища часов (128), и не зовёт storage', () => {
+  const m = fakeModules();
+  const results = [];
+  createLitePlatform(m).save('k', 'x'.repeat(200), (ok) => results.push(ok));
+  assert.deepEqual(results, [false]);
+  assert.deepEqual(m.calls.set, []);
+});

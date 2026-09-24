@@ -9,6 +9,11 @@ import { PHASES } from './engine.js';
 
 export var SETTINGS_KEY = 'breath.settings';
 
+// Хранилище часов (@system.storage, Lite Wearable) принимает значение не длиннее 128 байт, а JSON настроек
+// весит ~140 — запись молча проваливалась. Поэтому в хранилище идёт короткая строка вида
+// 'b1;478;5;1;0;auto;4,7,8,0' (пресет; минуты; вибрация; звук; язык; вдох,задержка,выдох,задержка).
+var COMPACT_PREFIX = 'b1';
+
 // Пределы для кнопок «−/+». session — в минутах, фазы — в секундах.
 export var LIMITS = {
   session: { min: 1, max: 60 },
@@ -38,13 +43,43 @@ export function defaultSettings() {
   };
 }
 
-// raw — объект или JSON-строка из хранилища. Некорректные поля заменяются значениями по умолчанию.
+export function encodeSettings(settings) {
+  var s = normalizeSettings(settings);
+  var c = s.custom;
+  return [
+    COMPACT_PREFIX,
+    s.presetId,
+    s.sessionSec / 60,
+    s.vibration ? 1 : 0,
+    s.sound ? 1 : 0,
+    s.language,
+    [c.inhale, c.holdIn, c.exhale, c.holdOut].join(',')
+  ].join(';');
+}
+
+function decodeCompact(text) {
+  var f = text.split(';');
+  if (f.length !== 7 || f[0] !== COMPACT_PREFIX) return null;
+  var phases = f[6].split(',');
+  var custom = {};
+  for (var i = 0; i < PHASES.length; i++) custom[PHASES[i]] = Number(phases[i]);
+  return {
+    presetId: f[1],
+    sessionSec: Number(f[2]) * 60,
+    vibration: f[3] === '1',
+    sound: f[4] === '1',
+    language: f[5],
+    custom: custom
+  };
+}
+
+// raw — объект, JSON-строка или компактная строка из хранилища. Некорректные поля заменяются значениями по умолчанию.
 export function normalizeSettings(raw) {
   var settings = defaultSettings();
   var source = raw;
   if (typeof source === 'string') {
     try {
-      source = JSON.parse(source);
+      source = source.indexOf(COMPACT_PREFIX + ';') === 0 ? decodeCompact(source) : JSON.parse(source);
     } catch (e) {
       source = null;
     }
