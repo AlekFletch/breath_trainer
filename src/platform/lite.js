@@ -17,7 +17,16 @@ export function createLitePlatform(modules) {
     now: function () {
       return new Date().getTime();
     },
+    // 'double' — двух коротких импульса подряд: у вибромотора часов нет отдельного режима для этого,
+    // поэтому это два обычных коротких импульса с небольшой паузой между ними.
     vibrate: function (mode) {
+      if (mode === 'double') {
+        vibrator.vibrate({ mode: 'short', success: noop, fail: noop });
+        setTimeout(function () {
+          vibrator.vibrate({ mode: 'short', success: noop, fail: noop });
+        }, 120);
+        return;
+      }
       vibrator.vibrate({ mode: mode === 'long' ? 'long' : 'short', success: noop, fail: noop });
     },
     keepScreenOn: function (on) {
@@ -40,28 +49,49 @@ export function createLitePlatform(modules) {
       };
     },
     // Хранилище на часах асинхронное и хранит строки: результат приходит в done уже разобранным.
+    // get/set на реальном устройстве изредка отдают fail без видимой причины — один повтор перед тем,
+    // как сдаться, спасает от того, что настройки «не сохранились», хотя на самом деле не прочитались/не записались.
     load: function (key, fallback, done) {
-      storage.get({
-        key: key,
-        default: '',
-        success: function (data) {
-          var value = fallback;
-          if (typeof data === 'string' && data !== '') {
-            try {
-              value = JSON.parse(data);
-            } catch (e) {
-              value = fallback;
+      function attempt(retriesLeft) {
+        storage.get({
+          key: key,
+          default: '',
+          success: function (data) {
+            var value = fallback;
+            if (typeof data === 'string' && data !== '') {
+              try {
+                value = JSON.parse(data);
+              } catch (e) {
+                value = fallback;
+              }
             }
+            done(value);
+          },
+          fail: function () {
+            if (retriesLeft > 0) attempt(retriesLeft - 1);
+            else done(fallback);
           }
-          done(value);
-        },
-        fail: function () {
-          done(fallback);
-        }
-      });
+        });
+      }
+      attempt(1);
     },
-    save: function (key, value) {
-      storage.set({ key: key, value: JSON.stringify(value), success: noop, fail: noop });
+    // done(ok) необязателен: страница «Сохранить» показывает по нему, записалось ли на самом деле.
+    save: function (key, value, done) {
+      var json = JSON.stringify(value);
+      function attempt(retriesLeft) {
+        storage.set({
+          key: key,
+          value: json,
+          success: function () {
+            if (done) done(true);
+          },
+          fail: function () {
+            if (retriesLeft > 0) attempt(retriesLeft - 1);
+            else if (done) done(false);
+          }
+        });
+      }
+      attempt(1);
     }
   };
 }

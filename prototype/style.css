@@ -251,7 +251,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pulse-dot { width: 22px; height: 22px; border-radius: 50%; background: #2c3039; }
 .pulse-dot.short { animation: flash 140ms ease-out; }
 .pulse-dot.long { animation: flash 1000ms ease-out; }
+.pulse-dot.double { animation: flash-double 260ms ease-out; }
 @keyframes flash {
   from { background: var(--accent); box-shadow: 0 0 18px var(--accent); }
   to { background: #2c3039; box-shadow: none; }
+}
+@keyframes flash-double {
+  0%, 45% { background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+  55%, 65% { background: #2c3039; box-shadow: none; }
+  75%, 100% { background: var(--accent); box-shadow: 0 0 18px var(--accent); }
 }

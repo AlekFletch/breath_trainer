@@ -127,7 +127,9 @@ export function createWebPlatform(options) {
       },
     vibrate: function (mode) {
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(mode === 'long' ? 1000 : 35);
+        if (mode === 'long') navigator.vibrate(1000);
+        else if (mode === 'double') navigator.vibrate([35, 90, 35]);
+        else navigator.vibrate(35);
       }
       if (opts.onVibrate) opts.onVibrate(mode);
     },

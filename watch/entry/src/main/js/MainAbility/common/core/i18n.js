@@ -54,6 +54,9 @@ export var STRINGS = {
     'settings.sound': 'Звук',
     'settings.vibration': 'Вибрация',
     'settings.customSection': 'Своё дыхание',
+    'settings.save': 'Сохранить',
+    'settings.saved': 'Сохранено',
+    'settings.saveFailed': 'Не сохранено',
     'common.on': 'Вкл',
     'common.off': 'Выкл'
   },
@@ -92,6 +95,9 @@ export var STRINGS = {
     'settings.sound': 'Sound',
     'settings.vibration': 'Vibration',
     'settings.customSection': 'Custom breathing',
+    'settings.save': 'Save',
+    'settings.saved': 'Saved',
+    'settings.saveFailed': 'Not saved',
     'common.on': 'On',
     'common.off': 'Off'
   },
@@ -130,6 +136,9 @@ export var STRINGS = {
     'settings.sound': 'Sonido',
     'settings.vibration': 'Vibración',
     'settings.customSection': 'Respiración personalizada',
+    'settings.save': 'Guardar',
+    'settings.saved': 'Guardado',
+    'settings.saveFailed': 'No guardado',
     'common.on': 'Sí',
     'common.off': 'No'
   },
@@ -168,6 +177,9 @@ export var STRINGS = {
     'settings.sound': 'Ton',
     'settings.vibration': 'Vibration',
     'settings.customSection': 'Eigene Atmung',
+    'settings.save': 'Speichern',
+    'settings.saved': 'Gespeichert',
+    'settings.saveFailed': 'Nicht gespeichert',
     'common.on': 'An',
     'common.off': 'Aus'
   },
@@ -206,6 +218,9 @@ export var STRINGS = {
     'settings.sound': 'Son',
     'settings.vibration': 'Vibration',
     'settings.customSection': 'Respiration personnalisée',
+    'settings.save': 'Enregistrer',
+    'settings.saved': 'Enregistré',
+    'settings.saveFailed': 'Non enregistré',
     'common.on': 'Oui',
     'common.off': 'Non'
   },
@@ -244,6 +259,9 @@ export var STRINGS = {
     'settings.sound': '声音',
     'settings.vibration': '振动',
     'settings.customSection': '自定义呼吸',
+    'settings.save': '保存',
+    'settings.saved': '已保存',
+    'settings.saveFailed': '未保存',
     'common.on': '开',
     'common.off': '关'
   }

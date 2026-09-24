@@ -255,7 +255,7 @@ function log(line) {
 
 function showPulse(mode) {
   const dot = $('pulse-dot');
-  dot.classList.remove('short', 'long');
+  dot.classList.remove('short', 'long', 'double');
   void dot.offsetWidth; // перезапуск CSS-анимации
   dot.classList.add(mode);
 

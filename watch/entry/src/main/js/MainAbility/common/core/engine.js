@@ -40,7 +40,8 @@ export function validateConfig(config) {
 //              cyclesDone — число полностью пройденных циклов.
 //   events — границы, пересечённые с прошлого тика, по порядку и ровно по одному разу:
 //              { type: 'phaseStart', phase, cycleIndex, at }
-//              { type: 'secondTick', phase, n, cycleIndex, at }  — n-я секунда фазы, n = 1 совпадает с началом фазы
+//              { type: 'secondTick', phase, n, cycleIndex, at, last }  — n-я секунда фазы, n = 1 совпадает
+//                с началом фазы; last — true на последней секунде фазы (сигнал «сейчас закончится»)
 //              { type: 'end', at }
 export function createEngine(config) {
   var error = validateConfig(config);
@@ -120,7 +121,7 @@ export function createEngine(config) {
           if (pos <= from) continue;
           var cycleIndex = segCycleBase + c;
           if (s === 0) out.push({ type: 'phaseStart', phase: PHASES[i], cycleIndex: cycleIndex, at: at });
-          out.push({ type: 'secondTick', phase: PHASES[i], n: s / 1000 + 1, cycleIndex: cycleIndex, at: at });
+          out.push({ type: 'secondTick', phase: PHASES[i], n: s / 1000 + 1, cycleIndex: cycleIndex, at: at, last: s + 1000 >= durations[i] });
         }
       }
     }

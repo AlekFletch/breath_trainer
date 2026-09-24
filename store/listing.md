@@ -1,6 +1,6 @@
 # Материалы для AppGallery
 
-- Пакет: `com.konnov.breathtrainer`, версия 1.0.1 (1000001)
+- Пакет: `com.konnov.breathtrainer`, версия 1.0.2 (1000002)
 - Устройство: HUAWEI WATCH FIT 4 Pro и другие часы Lite Wearable с прямоугольным экраном 408 × 480
 - Категория: Здоровье и фитнес
 - Цена: бесплатно; без рекламы, без встроенных покупок, без сбора данных
@@ -34,7 +34,7 @@ AGC требует, чтобы название в магазине совпад
 
 Без рекламы, без регистрации, без интернета. Приложение не собирает никаких данных.
 
-**Что нового (1.0.1):** Первая версия.
+**Что нового (1.0.2):** Экран больше не гаснет и не завершает сессию раньше времени. Настройки цикла, длины сессии и языка теперь сохраняются надёжнее. На последней секунде задержки после вдоха — двойная вибрация вместо одиночной.
 
 ---
 
@@ -58,7 +58,7 @@ Calm breathing right on your wrist. The ball grows as you inhale and shrinks as 
 
 No ads, no sign-up, no internet. The app collects no data.
 
-**What's new (1.0.1):** First release.
+**What's new (1.0.2):** The screen no longer turns off and ends a session early. Custom cycle, session length and language settings now save more reliably. A double vibration marks the last second of the post-inhale hold.
 
 ---
 
@@ -82,7 +82,7 @@ Respiración tranquila en tu muñeca. La bola crece al inhalar y se encoge al ex
 
 Sin anuncios, sin registro, sin internet. La app no recopila ningún dato.
 
-**Novedades (1.0.1):** Primera versión.
+**Novedades (1.0.2):** La pantalla ya no se apaga ni corta la sesión antes de tiempo. El ciclo, la duración de la sesión y el idioma se guardan de forma más fiable. Una vibración doble marca el último segundo de la retención tras la inhalación.
 
 ---
 
@@ -106,7 +106,7 @@ Ruhiges Atmen direkt am Handgelenk. Die Kugel wächst beim Einatmen und schrumpf
 
 Keine Werbung, keine Anmeldung, kein Internet. Die App erhebt keine Daten.
 
-**Neu in 1.0.1:** Erste Version.
+**Neu in 1.0.2:** Der Bildschirm schaltet sich während einer Sitzung nicht mehr vorzeitig ab. Zyklus, Sitzungsdauer und Sprache werden zuverlässiger gespeichert. Eine doppelte Vibration markiert die letzte Sekunde der Atempause nach dem Einatmen.
 
 ---
 
@@ -130,7 +130,7 @@ Une respiration calme, directement au poignet. La bulle grandit à l'inspiration
 
 Sans publicité, sans inscription, sans internet. L'application ne collecte aucune donnée.
 
-**Nouveautés (1.0.1) :** Première version.
+**Nouveautés (1.0.2) :** L'écran ne s'éteint plus et n'interrompt plus la séance avant la fin. Le cycle, la durée de séance et la langue sont enregistrés de façon plus fiable. Une double vibration signale la dernière seconde de la rétention après l'inspiration.
 
 ---
 
@@ -154,4 +154,4 @@ Sans publicité, sans inscription, sans internet. L'application ne collecte aucu
 
 无广告、无需注册、无需联网。应用不收集任何数据。
 
-**新版本特性（1.0.1）：** 首个版本。
+**新版本特性（1.0.2）：** 练习中屏幕不再提前熄灭或中断会话；自定义周期、练习时长和语言设置保存更可靠；吸气后屏息的最后一秒改为双重振动提示。

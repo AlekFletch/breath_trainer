@@ -21,6 +21,8 @@ var STEP_FIELDS = [
 
 var platform = null;
 var settings = null;
+var saveResult = ''; // '' | 'saved' | 'saveFailed' — что показать на кнопке вместо «Сохранить»
+var saveTimer = null;
 
 var page = {
     data: {
@@ -34,7 +36,8 @@ var page = {
         inhaleLabel: '', inhaleValue: '',
         holdInLabel: '', holdInValue: '',
         exhaleLabel: '', exhaleValue: '',
-        holdOutLabel: '', holdOutValue: ''
+        holdOutLabel: '', holdOutValue: '',
+        saveLabel: ''
     },
 
     onInit: function () {
@@ -50,6 +53,12 @@ var page = {
         focusRotation(this.$refs.list, true);
     },
 
+    onDestroy: function () {
+        if (saveTimer) clearTimeout(saveTimer);
+        saveTimer = null;
+        saveResult = '';
+    },
+
     leave: function (target) {
         focusRotation(this.$refs.list, false);
         navigate(router, target, settings);
@@ -63,6 +72,7 @@ var page = {
         setIfChanged(this, 'vibrationLabel', t('settings.vibration'));
         setIfChanged(this, 'vibration', settings.vibration);
         setIfChanged(this, 'customLabel', t('settings.customSection'));
+        setIfChanged(this, 'saveLabel', t(saveResult ? 'settings.' + saveResult : 'settings.save'));
         for (var i = 0; i < STEP_FIELDS.length; i++) {
             var field = STEP_FIELDS[i];
             setIfChanged(this, field.key + 'Label', t('settings.' + field.key));
@@ -75,6 +85,21 @@ var page = {
         settings = next;
         saveSettings(platform, settings);
         this.refresh();
+    },
+
+    // Настройки пишутся в хранилище и при каждой правке; кнопка записывает их ещё раз и показывает, получилось ли.
+    save: function () {
+        var vm = this;
+        saveSettings(platform, settings, function (ok) {
+            saveResult = ok ? 'saved' : 'saveFailed';
+            vm.refresh();
+            if (saveTimer) clearTimeout(saveTimer);
+            saveTimer = setTimeout(function () {
+                saveResult = '';
+                saveTimer = null;
+                vm.refresh();
+            }, 2000);
+        });
     },
 
     step: function (key, delta) {

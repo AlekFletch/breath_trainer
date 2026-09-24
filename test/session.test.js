@@ -42,9 +42,22 @@ test('сессия держит экран, вибрирует по рисунк
   assert.equal(p.t, 8000);
   assert.equal(p.loop, null);
   assert.deepEqual(p.screen, [true, false]);
-  assert.equal(p.vibrations.filter((m) => m === 'short').length, 4 + 2 + 2); // вдох 2 с × 2 Гц, две задержки по 2 тика
+  // вдох 2 с × 2 Гц = 4 минус импульс в паузе последней секунды = 3, задержка после вдоха: 2 тика, последний — двойной; задержка после выдоха: 2 обычных тика
+  assert.equal(p.vibrations.filter((m) => m === 'short').length, 3 + 1 + 2);
+  assert.equal(p.vibrations.filter((m) => m === 'double').length, 1);
   assert.equal(p.vibrations.at(-1), 'long');
   assert.equal(frames.at(-1).done, true);
+});
+
+test('долгая сессия периодически повторяет keepScreenOn(true), чтобы часы не гасили экран сами', () => {
+  const p = fakePlatform();
+  // Цикл 16 с, таймер 130 с → додышивается до 144 с: пересекает два порога повтора (60 с и 120 с).
+  const session = createSession(cfg(4, 4, 4, 4, 130), p);
+  session.start();
+  advance(p, Infinity);
+
+  assert.equal(p.t, 144000);
+  assert.deepEqual(p.screen, [true, true, true, false]);
 });
 
 test('пауза останавливает кадры, возобновление продолжает время с того же места', () => {

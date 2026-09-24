@@ -57,5 +57,8 @@
                 <text class="step" onclick="holdOutPlus">+</text>
             </div>
         </list-item>
+        <list-item class="item-save">
+            <text class="save" onclick="save">{{saveLabel}}</text>
+        </list-item>
     </list>
 </div>

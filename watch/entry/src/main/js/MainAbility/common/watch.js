@@ -17,8 +17,9 @@ export function loadSettings(vm, platform, apply) {
   });
 }
 
-export function saveSettings(platform, settings) {
-  platform.save(SETTINGS_KEY, settings);
+// done(ok) необязателен — см. platform.save.
+export function saveSettings(platform, settings, done) {
+  platform.save(SETTINGS_KEY, settings, done);
 }
 
 export function translatorFor(platform, settings) {

@@ -9,6 +9,10 @@ import { createEngine } from './engine.js';
 import { createHaptics } from './haptics.js';
 import { createSoundCues } from './sounds.js';
 
+// Часы иногда гасят экран сами по себе спустя несколько минут, будто keepScreenOn — это аренда,
+// а не постоянный флаг: чтобы длинная сессия не обрывалась, запрос повторяется, пока сессия идёт.
+var KEEP_SCREEN_ON_RENEW_MS = 60 * 1000;
+
 export function createSession(config, platform, options) {
   var opts = options || {};
   var engine = createEngine(config);
@@ -18,9 +22,15 @@ export function createSession(config, platform, options) {
   var fps = opts.fps > 0 ? opts.fps : 25;
   var stopLoop = null;
   var last = null;
+  var keptScreenOnAt = 0;
 
   function step() {
-    var result = engine.tick(platform.now());
+    var now = platform.now();
+    if (now - keptScreenOnAt >= KEEP_SCREEN_ON_RENEW_MS) {
+      keptScreenOnAt = now;
+      platform.keepScreenOn(true);
+    }
+    var result = engine.tick(now);
     last = result.state;
 
     var pulse = haptics.frame(result);
@@ -56,6 +66,7 @@ export function createSession(config, platform, options) {
   return {
     start: function () {
       engine.start(platform.now());
+      keptScreenOnAt = platform.now();
       platform.keepScreenOn(true);
       runLoop();
       step();
