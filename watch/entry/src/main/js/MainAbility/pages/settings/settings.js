@@ -88,6 +88,7 @@ var page = {
     },
 
     // Настройки пишутся в хранилище и при каждой правке; кнопка записывает их ещё раз и показывает, получилось ли.
+    // Успех: на полсекунды «Сохранено» и возврат на главный экран. Неудача: остаёмся здесь, «Не сохранено» 2 секунды.
     save: function () {
         var vm = this;
         saveSettings(platform, settings, function (ok) {
@@ -95,10 +96,14 @@ var page = {
             vm.refresh();
             if (saveTimer) clearTimeout(saveTimer);
             saveTimer = setTimeout(function () {
-                saveResult = '';
                 saveTimer = null;
+                if (ok) {
+                    vm.goBack();
+                    return;
+                }
+                saveResult = '';
                 vm.refresh();
-            }, 2000);
+            }, ok ? 500 : 2000);
         });
     },
 
