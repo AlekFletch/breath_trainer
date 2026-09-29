@@ -1,4 +1,5 @@
-/* Экран часов вертикальный: 408 × 480. Блок 368 px по ширине и по центру по вертикали. */
+/* Две вёрстки, видна одна (show): .layout — прямоугольный экран 408 × 480, .r-layout — круглый 454 или 466.
+   Размер страницы — по экрану (index.js). Сверху вниз: «Настройки» и «Вибро», два ряда пресетов, «Старт». */
 .page {
   width: 408px;
   height: 480px;
@@ -7,15 +8,38 @@
   align-items: center;
   background-color: #000000;
 }
+.layout {
+  width: 368px;
+  height: 364px;
+  flex-direction: column;
+}
+.row {
+  width: 368px;
+  height: 60px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.btn {
+  width: 179px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #1b1e26;
+}
+.btn-text {
+  width: 165px;
+  height: 30px;
+  font-size: 20px;
+  text-align: center;
+  color: #e8eaf0;
+}
 .grid-row {
   width: 368px;
   height: 96px;
   margin-top: 10px;
   flex-direction: row;
   justify-content: space-between;
-}
-.first-row {
-  margin-top: 0px;
 }
 .card {
   width: 179px;
@@ -41,28 +65,6 @@
   font-size: 20px;
   color: #9aa3b5;
 }
-.row {
-  width: 368px;
-  height: 60px;
-  margin-top: 12px;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.btn {
-  width: 179px;
-  height: 60px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  background-color: #1b1e26;
-}
-.btn-text {
-  width: 165px;
-  height: 30px;
-  font-size: 20px;
-  text-align: center;
-  color: #e8eaf0;
-}
 .start {
   width: 368px;
   height: 80px;
@@ -76,6 +78,83 @@
   width: 340px;
   height: 40px;
   font-size: 30px;
+  text-align: center;
+  color: #02110f;
+}
+
+/* Круглый экран: узкие кнопки сверху и «Старт» снизу, широкие пресеты — посередине, где круг шире всего.
+   Блок 340 × 312 помещается в круг 454. */
+.r-layout {
+  width: 340px;
+  height: 312px;
+  flex-direction: column;
+  align-items: center;
+}
+.r-row {
+  width: 288px;
+  height: 52px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.r-btn {
+  width: 140px;
+  height: 52px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 26px;
+  background-color: #1b1e26;
+}
+.r-btn-text {
+  width: 128px;
+  height: 26px;
+  font-size: 18px;
+  text-align: center;
+  color: #e8eaf0;
+}
+.r-grid-row {
+  width: 340px;
+  height: 84px;
+  margin-top: 8px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.r-card {
+  width: 166px;
+  height: 84px;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 20px;
+  border-width: 2px;
+  border-color: #1b1e26;
+  background-color: #1b1e26;
+}
+.r-card-title {
+  width: 146px;
+  height: 30px;
+  margin-left: 10px;
+  font-size: 21px;
+  color: #e8eaf0;
+}
+.r-card-sub {
+  width: 146px;
+  height: 26px;
+  margin-left: 10px;
+  font-size: 19px;
+  color: #9aa3b5;
+}
+.r-start {
+  width: 272px;
+  height: 64px;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 32px;
+  background-color: #4fd1c5;
+}
+.r-start-text {
+  width: 252px;
+  height: 36px;
+  font-size: 26px;
   text-align: center;
   color: #02110f;
 }

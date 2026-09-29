@@ -8,7 +8,6 @@ export const WATCH_COMMON = 'watch/entry/src/main/js/MainAbility/common';
 export const SYNCED_FILES = [
   'src/core/engine.js',
   'src/core/haptics.js',
-  'src/core/sounds.js',
   'src/core/session.js',
   'src/core/view.js',
   'src/core/presets.js',

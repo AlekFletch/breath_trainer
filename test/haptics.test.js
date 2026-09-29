@@ -77,3 +77,21 @@ test('последняя секунда вдоха молчит: между по
 test('очень короткий вдох не прерывается', () => {
   assert.ok(shortsIn(pulses(cfg(1, 0, 1, 0, 2), { inhalePulseHz: 3 }), 'inhale').length >= 3);
 });
+
+test('слабый режим: вдох — один импульс на последней секунде, задержка после вдоха и выдох — по одному на последней секунде, в конце short', () => {
+  const list = pulses(cfg(4, 7, 8, 0, 19), { inhalePulseHz: 3, strength: 'weak' });
+  assert.deepEqual(list, [
+    { mode: 'short', phase: 'inhale', t: 3000 },
+    { mode: 'short', phase: 'holdIn', t: 10000 },
+    { mode: 'short', phase: 'exhale', t: 18000 },
+    { mode: 'short', phase: 'inhale', t: 19000 }
+  ]);
+});
+
+test('слабый режим: без задержки после вдоха импульс приходится на последнюю секунду вдоха, а последняя секунда выдоха тоже подаёт сигнал; каждый цикл', () => {
+  const list = pulses(cfg(4, 0, 6, 0, 20), { strength: 'weak' });
+  assert.deepEqual(
+    list.filter((p) => p.mode === 'short').map((p) => p.t),
+    [3000, 9000, 13000, 19000, 20000]
+  );
+});

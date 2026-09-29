@@ -3,12 +3,13 @@ import storage from '@system.storage';
 import vibrator from '@system.vibrator';
 import brightness from '@system.brightness';
 import configuration from '@system.configuration';
+import device from '@system.device';
 import { AUTO_LANGUAGE, languageName } from '../../common/core/i18n.js';
 import { settingValue, stepSetting, updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { focusRotation, loadSettings, navigate, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
+import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
 
-// Настройки: язык, вибрация, длина сессии, фазы пресета «Своё». Список прокручивается колёсиком.
+// Настройки: язык, вибрация (вкл/выкл и сила: сильная или слабая ночная), длина сессии, фазы пресета «Своё». Список прокручивается колёсиком.
 // Пункта «Звук» нет: на часах звук недоступен (см. src/platform/lite.js).
 
 var STEP_FIELDS = [
@@ -21,28 +22,32 @@ var STEP_FIELDS = [
 
 var platform = null;
 var settings = null;
-var saveResult = ''; // '' | 'saved' | 'saveFailed' — что показать на кнопке вместо «Сохранить»
-var saveTimer = null;
 
 var page = {
     data: {
         settingsJson: '',
+        screenWidth: 408, screenHeight: 480,
+        headWidth: 360, headTop: 24, titleWidth: 298,
+        contentWidth: 360, listHeight: 368, switchLabelWidth: 280,
         backGlyph: '<',
         title: '',
         languageLabel: '', languageValue: '',
         vibrationLabel: '', vibration: true,
+        strengthLabel: '', strengthValue: '',
         customLabel: '',
         sessionLabel: '', sessionValue: '',
         inhaleLabel: '', inhaleValue: '',
         holdInLabel: '', holdInValue: '',
         exhaleLabel: '', exhaleValue: '',
-        holdOutLabel: '', holdOutValue: '',
-        saveLabel: ''
+        holdOutLabel: '', holdOutValue: ''
     },
 
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
+        readScreen(device, function (screen) {
+            applyLayout(vm, listLayout(screen));
+        });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
@@ -54,9 +59,6 @@ var page = {
     },
 
     onDestroy: function () {
-        if (saveTimer) clearTimeout(saveTimer);
-        saveTimer = null;
-        saveResult = '';
     },
 
     leave: function (target) {
@@ -71,8 +73,9 @@ var page = {
         setIfChanged(this, 'languageValue', settings.language === AUTO_LANGUAGE ? t('language.auto') : languageName(settings.language));
         setIfChanged(this, 'vibrationLabel', t('settings.vibration'));
         setIfChanged(this, 'vibration', settings.vibration);
+        setIfChanged(this, 'strengthLabel', t('settings.vibrationStrength'));
+        setIfChanged(this, 'strengthValue', t(settings.vibrationStrength === 'weak' ? 'settings.strengthWeak' : 'settings.strengthStrong'));
         setIfChanged(this, 'customLabel', t('settings.customSection'));
-        setIfChanged(this, 'saveLabel', t(saveResult ? 'settings.' + saveResult : 'settings.save'));
         for (var i = 0; i < STEP_FIELDS.length; i++) {
             var field = STEP_FIELDS[i];
             setIfChanged(this, field.key + 'Label', t('settings.' + field.key));
@@ -80,31 +83,12 @@ var page = {
         }
     },
 
+    // Каждая правка сразу пишется в хранилище: кнопки «Сохранить» нет.
     apply: function (next) {
         if (next === settings) return;
         settings = next;
         saveSettings(platform, settings);
         this.refresh();
-    },
-
-    // Настройки пишутся в хранилище и при каждой правке; кнопка записывает их ещё раз и показывает, получилось ли.
-    // Успех: на полсекунды «Сохранено» и возврат на главный экран. Неудача: остаёмся здесь, «Не сохранено» 2 секунды.
-    save: function () {
-        var vm = this;
-        saveSettings(platform, settings, function (ok) {
-            saveResult = ok ? 'saved' : 'saveFailed';
-            vm.refresh();
-            if (saveTimer) clearTimeout(saveTimer);
-            saveTimer = setTimeout(function () {
-                saveTimer = null;
-                if (ok) {
-                    vm.goBack();
-                    return;
-                }
-                saveResult = '';
-                vm.refresh();
-            }, ok ? 500 : 2000);
-        });
     },
 
     step: function (key, delta) {
@@ -114,6 +98,10 @@ var page = {
     onVibrationChange: function (e) {
         var checked = e && typeof e.checked === 'boolean' ? e.checked : !settings.vibration;
         this.apply(updateSettings(settings, { vibration: checked }));
+    },
+
+    toggleStrength: function () {
+        this.apply(updateSettings(settings, { vibrationStrength: settings.vibrationStrength === 'weak' ? 'strong' : 'weak' }));
     },
 
     openLanguage: function () {

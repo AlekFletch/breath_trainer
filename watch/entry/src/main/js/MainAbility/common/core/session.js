@@ -3,11 +3,13 @@
 //
 // platform: { now(), vibrate(mode), keepScreenOn(on), startLoop(fn, fps) -> stop,
 //             playSound(name, { durationMs, offsetMs }), stopSound() }  — звук необязателен
-// options:  { vibration, sound, inhalePulseHz, fps, onFrame(state) }
+// options:  { vibration, vibrationStrength ('strong' | 'weak'), sound, createSoundCues, inhalePulseHz, fps, onFrame(state) }
+//
+// Звуковые подсказки (createSoundCues из sounds.js) передаёт вызывающий: на часах звука нет, и модуль
+// не должен попадать в бандл страницы сессии — куча JS там всего 100 КБ.
 
 import { createEngine } from './engine.js';
 import { createHaptics } from './haptics.js';
-import { createSoundCues } from './sounds.js';
 
 // Часы иногда гасят экран сами по себе спустя несколько минут, будто keepScreenOn — это аренда,
 // а не постоянный флаг: чтобы длинная сессия не обрывалась, запрос повторяется, пока сессия идёт.
@@ -16,9 +18,11 @@ var KEEP_SCREEN_ON_RENEW_MS = 60 * 1000;
 export function createSession(config, platform, options) {
   var opts = options || {};
   var engine = createEngine(config);
-  var haptics = createHaptics({ inhalePulseHz: opts.inhalePulseHz, enabled: opts.vibration });
+  var haptics = createHaptics({ inhalePulseHz: opts.inhalePulseHz, enabled: opts.vibration, strength: opts.vibrationStrength });
   var canSound = typeof platform.playSound === 'function' && typeof platform.stopSound === 'function';
-  var sounds = createSoundCues({ enabled: canSound && opts.sound === true });
+  var sounds = canSound && opts.sound === true && typeof opts.createSoundCues === 'function'
+    ? opts.createSoundCues({ enabled: true })
+    : null;
   var fps = opts.fps > 0 ? opts.fps : 25;
   var stopLoop = null;
   var last = null;
@@ -36,7 +40,7 @@ export function createSession(config, platform, options) {
     var pulse = haptics.frame(result);
     if (pulse) platform.vibrate(pulse);
 
-    var commands = sounds.frame(result);
+    var commands = sounds ? sounds.frame(result) : [];
     for (var i = 0; i < commands.length; i++) {
       if (commands[i].cmd === 'stop') platform.stopSound();
       else platform.playSound(commands[i].sound, commands[i]);

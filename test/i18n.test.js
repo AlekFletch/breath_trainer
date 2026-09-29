@@ -3,31 +3,41 @@ import assert from 'node:assert/strict';
 import {
   AUTO_LANGUAGE,
   LANGUAGES,
-  STRINGS,
+  KEYS,
+  TEXTS,
   createTranslator,
   languageName,
   matchLocale,
-  resolveLanguage
+  resolveLanguage,
+  stringsFor
 } from '../src/core/i18n.js';
 import { PRESETS } from '../src/core/presets.js';
 import { PHASES } from '../src/core/engine.js';
 
 test('шесть языков, и у каждого есть таблица строк', () => {
   assert.deepEqual(LANGUAGES.map((l) => l.code), ['ru', 'en', 'es', 'de', 'fr', 'zh']);
-  assert.deepEqual(Object.keys(STRINGS).sort(), LANGUAGES.map((l) => l.code).sort());
+  assert.deepEqual(Object.keys(TEXTS).sort(), LANGUAGES.map((l) => l.code).sort());
 });
 
-test('во всех языках ровно те же ключи, что в английском', () => {
-  const reference = Object.keys(STRINGS.en).sort();
+test('в каждом языке по строке на каждый ключ, без пустых', () => {
+  assert.equal(new Set(KEYS).size, KEYS.length, 'повторяющиеся ключи');
   for (const { code } of LANGUAGES) {
-    assert.deepEqual(Object.keys(STRINGS[code]).sort(), reference, code);
-    for (const key of reference) assert.ok(STRINGS[code][key].trim(), `${code}: пустая строка ${key}`);
+    const texts = TEXTS[code].split('|');
+    assert.equal(texts.length, KEYS.length, `${code}: строк не столько, сколько ключей`);
+    for (let i = 0; i < KEYS.length; i++) assert.ok(texts[i].trim(), `${code}: пустая строка ${KEYS[i]}`);
   }
 });
 
+test('таблица языка: ключ → строка, неподдержанный язык — английский', () => {
+  assert.equal(stringsFor('ru')['phase.inhale'], 'Вдох');
+  assert.equal(stringsFor('en')['stats.backHint'], 'Tap to go back');
+  assert.deepEqual(stringsFor('xx'), stringsFor('en'));
+});
+
 test('есть подписи для всех фаз и пресетов', () => {
-  for (const phase of PHASES) assert.ok(STRINGS.en['phase.' + phase], phase);
-  for (const preset of PRESETS) assert.ok(STRINGS.en['preset.' + preset.id], preset.id);
+  const en = stringsFor('en');
+  for (const phase of PHASES) assert.ok(en['phase.' + phase], phase);
+  for (const preset of PRESETS) assert.ok(en['preset.' + preset.id], preset.id);
 });
 
 test('язык системы: поддержанный берётся, остальные — английский', () => {

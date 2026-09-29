@@ -78,7 +78,7 @@ export function createLitePlatform(modules) {
       }
       attempt(1);
     },
-    // done(ok) необязателен: страница «Сохранить» показывает по нему, записалось ли на самом деле.
+    // done(ok) необязателен: по нему страница может дождаться записи, прежде чем уходить.
     save: function (key, value, done) {
       var json = JSON.stringify(value);
       if (json.length > STORAGE_MAX_VALUE) {

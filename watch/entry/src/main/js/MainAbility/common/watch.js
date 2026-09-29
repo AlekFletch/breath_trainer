@@ -44,3 +44,55 @@ export function focusRotation(list, focus) {
 export function setIfChanged(vm, key, value) {
   if (vm[key] !== value) vm[key] = value;
 }
+
+// Круглые часы (WATCH GT: 454 × 454, 466 × 466) узнаются по screenShape или по квадратному экрану
+// не меньше 440 px (симулятор всегда отдаёт 'rect'). @media для этого не годится: в рантайме Lite условие
+// по ширине сверяется не с реальным экраном, а составное условие роняет движок.
+export var ROUND_MIN_SIDE = 440;
+var RECT_SCREEN = { width: 408, height: 480, round: false };
+
+export function isRoundScreen(shape, width, height) {
+  if (shape === 'circle') return true;
+  return width === height && width >= ROUND_MIN_SIDE;
+}
+
+// Экран часов: apply({ width, height, round }) — сразу с прямоугольным 408 × 480, затем с настоящим:
+// getInfo отвечает асинхронно. Без @system.device экран остаётся прямоугольным.
+export function readScreen(device, apply) {
+  apply(RECT_SCREEN);
+  try {
+    device.getInfo({
+      success: function (info) {
+        var width = info.windowWidth || RECT_SCREEN.width;
+        var height = info.windowHeight || RECT_SCREEN.height;
+        apply({ width: width, height: height, round: isRoundScreen(info.screenShape, width, height) });
+      }
+    });
+  } catch (e) {
+    // остаётся прямоугольный экран
+  }
+}
+
+// Размеры страниц со списком (настройки, язык): заголовок с «<» сверху, под ним список.
+// На круглом экране заголовок уже и ниже, список уже — так строки не заходят за край круга.
+export function listLayout(screen) {
+  if (!screen.round) {
+    return {
+      screenWidth: screen.width, screenHeight: screen.height,
+      headWidth: 360, headTop: 24, titleWidth: 298,
+      contentWidth: 360, listHeight: screen.height - 112, switchLabelWidth: 280
+    };
+  }
+  var cy = Math.round(screen.height / 2);
+  return {
+    screenWidth: screen.width, screenHeight: screen.height,
+    headWidth: 240, headTop: cy - 190, titleWidth: 178,
+    contentWidth: 290, listHeight: 296, switchLabelWidth: 210
+  };
+}
+
+export function applyLayout(vm, layout) {
+  for (var key in layout) {
+    if (Object.prototype.hasOwnProperty.call(layout, key)) setIfChanged(vm, key, layout[key]);
+  }
+}

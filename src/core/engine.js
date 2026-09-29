@@ -2,7 +2,10 @@
 // Время приходит снаружи (now, мс) — состояние считается от абсолютного времени, поэтому дрейфа нет.
 // Синтаксис ES5 + export: этот же файл исполняется JS-рантаймом ArkUI.Lite на часах.
 
-export var PHASES = ['inhale', 'holdIn', 'exhale', 'holdOut'];
+// Порядок фаз объявлен в presets.js: страницам часов без сессии не нужно тянуть в память весь движок.
+import { PHASES } from './presets.js';
+
+export { PHASES };
 
 var MAX_PHASE_SEC = 60;
 var MAX_SESSION_SEC = 60 * 60;

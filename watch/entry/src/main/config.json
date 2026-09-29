@@ -3,8 +3,8 @@
     "bundleName": "com.konnov.breathtrainer",
     "vendor": "AKdev",
     "version": {
-      "code": 1000003,
-      "name": "1.0.3"
+      "code": 1000004,
+      "name": "1.0.4"
     }
   },
   "deviceConfig": {},
@@ -12,6 +12,23 @@
     "deviceType": [
       "liteWearable"
     ],
+    "distroFilter": {
+      "screenShape": {
+        "policy": "include",
+        "value": [
+          "rect",
+          "circle"
+        ]
+      },
+      "screenWindow": {
+        "policy": "include",
+        "value": [
+          "408*480",
+          "454*454",
+          "466*466"
+        ]
+      }
+    },
     "reqPermissions": [
       {
         "name": "ohos.permission.VIBRATE",

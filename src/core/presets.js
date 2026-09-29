@@ -1,6 +1,9 @@
 // Пресеты дыхания. Значения фаз — в секундах; «Своё» — значения по умолчанию, пользователь их переопределяет.
 // Названия — в i18n.js под ключами preset.<id>.
 
+// Порядок фаз цикла. Реэкспортируется из engine.js.
+export var PHASES = ['inhale', 'holdIn', 'exhale', 'holdOut'];
+
 export var DEFAULT_SESSION_SEC = 5 * 60;
 
 export var PRESETS = [

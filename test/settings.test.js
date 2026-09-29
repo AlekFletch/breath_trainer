@@ -14,6 +14,7 @@ test('по умолчанию: 4-7-8, 5 минут, вибрация вкл, з�
     presetId: '478',
     sessionSec: 300,
     vibration: true,
+    vibrationStrength: 'strong',
     sound: false,
     language: 'auto',
     custom: { inhale: 5, holdIn: 2, exhale: 5, holdOut: 2 }
@@ -42,6 +43,7 @@ test('корректные поля сохраняются, некорректн
     presetId: 'box',
     sessionSec: 300,
     vibration: true,
+    vibrationStrength: 'strong',
     sound: true,
     language: 'de',
     custom: { inhale: 3, holdIn: 0, exhale: 6, holdOut: 0 }
@@ -100,4 +102,13 @@ test('компактная запись для хранилища часов: к
   assert.deepEqual(normalizeSettings(text), s);
   assert.deepEqual(normalizeSettings('b1;bad;x'), defaultSettings());
   assert.deepEqual(normalizeSettings(encodeSettings(defaultSettings())), defaultSettings());
+});
+
+test('сила вибрации: слабая сохраняется в компактной записи, старая запись без неё — сильная, мусор — сильная', async () => {
+  const { encodeSettings, normalizeSettings, defaultSettings, updateSettings } = await import('../src/core/settings.js');
+  const weak = updateSettings(defaultSettings(), { vibrationStrength: 'weak' });
+  assert.equal(weak.vibrationStrength, 'weak');
+  assert.equal(normalizeSettings(encodeSettings(weak)).vibrationStrength, 'weak');
+  assert.equal(normalizeSettings('b1;478;5;1;0;auto;4,7,8,0').vibrationStrength, 'strong');
+  assert.equal(updateSettings(defaultSettings(), { vibrationStrength: 'loud' }).vibrationStrength, 'strong');
 });

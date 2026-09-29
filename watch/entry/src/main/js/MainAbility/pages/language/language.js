@@ -3,10 +3,11 @@ import storage from '@system.storage';
 import vibrator from '@system.vibrator';
 import brightness from '@system.brightness';
 import configuration from '@system.configuration';
+import device from '@system.device';
 import { AUTO_LANGUAGE, LANGUAGES, languageName, matchLocale } from '../../common/core/i18n.js';
 import { updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { focusRotation, loadSettings, navigate, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
+import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
 
 // Выбор языка: «Как в системе» и шесть языков. Выбор сохраняется и возвращает в настройки.
 // Выбранный пункт подсвечивается цветом через style: привязка данных в class на Lite не поддерживается.
@@ -14,8 +15,12 @@ import { focusRotation, loadSettings, navigate, saveSettings, setIfChanged, tran
 var COLOR_SELECTED = '#4fd1c5';
 var COLOR_NORMAL = '#e8eaf0';
 
+// Сколько ждать ответа хранилища перед переходом, если он так и не пришёл.
+var SAVE_WAIT_MS = 500;
+
 var platform = null;
 var settings = null;
+var saveTimer = null;
 var OPTION_CODES = [AUTO_LANGUAGE].concat(LANGUAGES.map(function (language) {
     return language.code;
 }));
@@ -23,6 +28,9 @@ var OPTION_CODES = [AUTO_LANGUAGE].concat(LANGUAGES.map(function (language) {
 var page = {
     data: {
         settingsJson: '',
+        screenWidth: 408, screenHeight: 480,
+        headWidth: 360, headTop: 24, titleWidth: 298,
+        contentWidth: 360, listHeight: 368, nameWidth: 210, subWidth: 118,
         backGlyph: '<',
         title: '',
         option0Name: '', option0Sub: '', option0Color: COLOR_NORMAL, option0Selected: false,
@@ -37,6 +45,12 @@ var page = {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
+        readScreen(device, function (screen) {
+            applyLayout(vm, listLayout(screen));
+            // На круглом экране подписи «язык системы» справа нет места — имя языка шире.
+            setIfChanged(vm, 'nameWidth', screen.round ? 242 : 210);
+            setIfChanged(vm, 'subWidth', screen.round ? 0 : 118);
+        });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
@@ -65,10 +79,20 @@ var page = {
         setIfChanged(this, 'option0Sub', languageName(matchLocale(platform.systemLocale())));
     },
 
+    // Переход — только после ответа хранилища: колбэк записи, пришедший уже после перехода, держит
+    // в памяти старую страницу вместе с новой, и куча JS (100 КБ) переполняется.
     pick: function (index) {
+        if (saveTimer) return;
+        var vm = this;
         settings = updateSettings(settings, { language: OPTION_CODES[index] });
-        saveSettings(platform, settings);
-        this.leave('settings');
+        function go() {
+            if (!saveTimer) return;
+            clearTimeout(saveTimer);
+            saveTimer = null;
+            vm.leave('settings');
+        }
+        saveTimer = setTimeout(go, SAVE_WAIT_MS);
+        saveSettings(platform, settings, go);
     },
 
     goBack: function () {

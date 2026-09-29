@@ -1,4 +1,5 @@
-/* Экран часов вертикальный: 408 × 480. Центр — (204, 240). */
+/* Прямоугольный экран 408 × 480, центр (204, 240). Размер сцены и положение подписей задаёт session.js
+   по реальному экрану: на круглом (454, 466) фаза сверху по центру, время и прогресс снизу. */
 .stage {
   width: 408px;
   height: 480px;
@@ -60,7 +61,7 @@
   color: #4fd1c5;
   stroke-width: 6px;
 }
-/* Итоги сессии */
+/* Итоги сессии: блок 240 × 318 помещается и в круг 454, и в прямоугольник 408 × 480. */
 .stats {
   left: 0px;
   top: 0px;
@@ -71,47 +72,47 @@
   align-items: center;
 }
 .stats-title {
-  width: 340px;
-  height: 46px;
-  font-size: 36px;
+  width: 240px;
+  height: 40px;
+  font-size: 30px;
   text-align: center;
   color: #4fd1c5;
 }
 .stats-card {
-  width: 300px;
-  height: 290px;
-  margin-top: 18px;
+  width: 240px;
+  height: 222px;
+  margin-top: 12px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 32px;
+  border-radius: 28px;
   background-color: #12161d;
 }
 .stats-value {
-  width: 280px;
-  height: 80px;
-  font-size: 64px;
+  width: 220px;
+  height: 64px;
+  font-size: 52px;
   text-align: center;
   color: #ffffff;
 }
 .stats-label {
-  width: 280px;
-  height: 30px;
-  font-size: 22px;
+  width: 220px;
+  height: 28px;
+  font-size: 20px;
   text-align: center;
   color: #9aa3b5;
 }
 .stats-divider {
-  width: 200px;
+  width: 160px;
   height: 2px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   background-color: #262c38;
 }
 .stats-hint {
-  width: 340px;
-  height: 30px;
-  margin-top: 22px;
+  width: 260px;
+  height: 28px;
+  margin-top: 14px;
   font-size: 20px;
   text-align: center;
   color: #6b7486;

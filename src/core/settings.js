@@ -2,16 +2,17 @@
 // Общие для прототипа и часов. Хранилище может вернуть что угодно — наружу выходят только корректные настройки,
 // а изменение, которое сделало бы их некорректными, просто не применяется.
 
-import { DEFAULT_SESSION_SEC, findPreset } from './presets.js';
+import { DEFAULT_SESSION_SEC, PHASES, findPreset } from './presets.js';
 import { AUTO_LANGUAGE, isSupported } from './i18n.js';
-import { PHASES } from './engine.js';
 
 export var SETTINGS_KEY = 'breath.settings';
 
 // Хранилище часов (@system.storage, Lite Wearable) принимает значение не длиннее 128 байт, а JSON настроек
 // весит ~140 — запись молча проваливалась. Поэтому в хранилище идёт короткая строка вида
-// 'b1;478;5;1;0;auto;4,7,8,0' (пресет; минуты; вибрация; звук; язык; вдох,задержка,выдох,задержка).
+// 'b1;478;5;1;0;auto;4,7,8,0;s' (пресет; минуты; вибрация; звук; язык; вдох,задержка,выдох,задержка; сила вибрации s/w).
+// Строка без последнего поля (старые сохранения) читается как сильная вибрация.
 var COMPACT_PREFIX = 'b1';
+export var VIBRATION_STRENGTHS = ['strong', 'weak'];
 
 // Пределы для кнопок «−/+». session — в минутах, фазы — в секундах.
 export var LIMITS = {
@@ -36,6 +37,7 @@ export function defaultSettings() {
     presetId: '478',
     sessionSec: DEFAULT_SESSION_SEC,
     vibration: true,
+    vibrationStrength: 'strong',
     sound: false,
     language: AUTO_LANGUAGE,
     custom: { inhale: custom.inhale, holdIn: custom.holdIn, exhale: custom.exhale, holdOut: custom.holdOut }
@@ -52,13 +54,14 @@ export function encodeSettings(settings) {
     s.vibration ? 1 : 0,
     s.sound ? 1 : 0,
     s.language,
-    [c.inhale, c.holdIn, c.exhale, c.holdOut].join(',')
+    [c.inhale, c.holdIn, c.exhale, c.holdOut].join(','),
+    s.vibrationStrength === 'weak' ? 'w' : 's'
   ].join(';');
 }
 
 function decodeCompact(text) {
   var f = text.split(';');
-  if (f.length !== 7 || f[0] !== COMPACT_PREFIX) return null;
+  if ((f.length !== 7 && f.length !== 8) || f[0] !== COMPACT_PREFIX) return null;
   var phases = f[6].split(',');
   var custom = {};
   for (var i = 0; i < PHASES.length; i++) custom[PHASES[i]] = Number(phases[i]);
@@ -66,6 +69,7 @@ function decodeCompact(text) {
     presetId: f[1],
     sessionSec: Number(f[2]) * 60,
     vibration: f[3] === '1',
+    vibrationStrength: f[7] === 'w' ? 'weak' : 'strong',
     sound: f[4] === '1',
     language: f[5],
     custom: custom
@@ -88,6 +92,7 @@ export function normalizeSettings(raw) {
   if (typeof source.presetId === 'string' && findPreset(source.presetId)) settings.presetId = source.presetId;
   if (isIntIn(source.sessionSec / 60, LIMITS.session.min, LIMITS.session.max)) settings.sessionSec = source.sessionSec;
   if (typeof source.vibration === 'boolean') settings.vibration = source.vibration;
+  if (VIBRATION_STRENGTHS.indexOf(source.vibrationStrength) >= 0) settings.vibrationStrength = source.vibrationStrength;
   if (typeof source.sound === 'boolean') settings.sound = source.sound;
   if (source.language === AUTO_LANGUAGE || (typeof source.language === 'string' && isSupported(source.language))) {
     settings.language = source.language;

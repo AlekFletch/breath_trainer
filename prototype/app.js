@@ -1,5 +1,6 @@
 import { PRESETS, toConfig } from '../src/core/presets.js';
 import { createSession } from '../src/core/session.js';
+import { createSoundCues } from '../src/core/sounds.js';
 import { BALL, ballScale, displaySecond, formatClock } from '../src/core/view.js';
 import { DEFAULT_INHALE_PULSE_HZ } from '../src/core/haptics.js';
 import { AUTO_LANGUAGE, LANGUAGES, createTranslator, languageName, matchLocale, resolveLanguage } from '../src/core/i18n.js';
@@ -207,6 +208,7 @@ function startSession() {
   session = createSession(config, platform, {
     vibration: settings.vibration,
     sound: settings.sound,
+    createSoundCues,
     inhalePulseHz: tuning.inhalePulseHz,
     fps: tuning.fps,
     onFrame: renderFrame

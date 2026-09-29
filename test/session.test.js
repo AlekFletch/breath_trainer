@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSession } from '../src/core/session.js';
+import { createSoundCues } from '../src/core/sounds.js';
 import { PRESETS, DEFAULT_SESSION_SEC, toConfig } from '../src/core/presets.js';
 import { validateConfig } from '../src/core/engine.js';
 
@@ -90,7 +91,7 @@ test('со звуком: вдох, тики задержек, выдох и фи
   p.sounds = [];
   p.playSound = (name) => p.sounds.push(name);
   p.stopSound = () => p.sounds.push('stop');
-  const session = createSession(cfg(2, 2, 2, 2, 8), p, { sound: true, vibration: false });
+  const session = createSession(cfg(2, 2, 2, 2, 8), p, { sound: true, createSoundCues, vibration: false });
   session.start();
   advance(p, Infinity);
 
@@ -110,7 +111,7 @@ test('звук по умолчанию выключен, а платформа �
 
   const mute = fakePlatform(); // нет playSound / stopSound
   assert.doesNotThrow(() => {
-    createSession(cfg(2, 2, 2, 2, 8), mute, { sound: true }).start();
+    createSession(cfg(2, 2, 2, 2, 8), mute, { sound: true, createSoundCues }).start();
     advance(mute, Infinity);
   });
 });
