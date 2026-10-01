@@ -2,19 +2,29 @@
 // Страницы сменяют друг друга через router.replace (стека страниц на Lite нет), поэтому настройки
 // передаются в параметрах перехода и сохраняются в storage.
 
-import { SETTINGS_KEY, defaultSettings, encodeSettings, normalizeSettings } from './core/settings.js';
+import { SETTINGS_KEY, encodeSettings, normalizeSettings } from './core/settings.js';
 import { createTranslator, resolveLanguage } from './core/i18n.js';
 
-// Сначала — настройки из параметров перехода или значения по умолчанию, затем — из хранилища, если перехода не было.
+// Настройки из параметров перехода, а при первом запуске — из хранилища; apply вызывается один раз.
+// Значения по умолчанию заранее не рисуются: страница ждёт настоящих (иначе при запуске мерцает смена
+// пресета и надписей); нет сохранённых — normalizeSettings(null) даст значения по умолчанию.
 export function loadSettings(vm, platform, apply) {
   if (vm.settingsJson) {
     apply(normalizeSettings(vm.settingsJson));
     return;
   }
-  apply(defaultSettings());
   platform.load(SETTINGS_KEY, null, function (raw) {
     apply(normalizeSettings(raw));
   });
+}
+
+// Вызывает done, когда fn-ready позвали count раз: страница показывается, только когда всё готово.
+export function whenReady(count, done) {
+  var left = count;
+  return function () {
+    left--;
+    if (left === 0) done();
+  };
 }
 
 // done(ok) необязателен — см. platform.save.
@@ -56,20 +66,29 @@ export function isRoundScreen(shape, width, height) {
   return width === height && width >= ROUND_MIN_SIDE;
 }
 
-// Экран часов: apply({ width, height, round }) — сразу с прямоугольным 408 × 480, затем с настоящим:
-// getInfo отвечает асинхронно. Без @system.device экран остаётся прямоугольным.
+// Экран часов: apply({ width, height, round }) вызывается один раз, когда размер известен. getInfo отвечает
+// асинхронно, поэтому страницы до этого ничего не рисуют (иначе сначала мелькает прямоугольная раскладка).
+// Без @system.device или при ошибке — прямоугольный 408 × 480.
 export function readScreen(device, apply) {
-  apply(RECT_SCREEN);
+  var applied = false;
+  function once(screen) {
+    if (applied) return;
+    applied = true;
+    apply(screen);
+  }
   try {
     device.getInfo({
       success: function (info) {
         var width = info.windowWidth || RECT_SCREEN.width;
         var height = info.windowHeight || RECT_SCREEN.height;
-        apply({ width: width, height: height, round: isRoundScreen(info.screenShape, width, height) });
+        once({ width: width, height: height, round: isRoundScreen(info.screenShape, width, height) });
+      },
+      fail: function () {
+        once(RECT_SCREEN);
       }
     });
   } catch (e) {
-    // остаётся прямоугольный экран
+    once(RECT_SCREEN);
   }
 }
 

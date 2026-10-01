@@ -8,7 +8,7 @@ import device from '@system.device';
 import { PRESETS } from '../../common/core/presets.js';
 import { phasesFor, updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
+import { loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
 
 // Главный экран: настройки, вибрация, четыре пресета, старт. Свайп вправо закрывает приложение.
 // Выбранный пресет подсвечивается рамкой через style: привязка данных в class на Lite не поддерживается.
@@ -23,7 +23,7 @@ var settings = null;
 export default {
     data: {
         settingsJson: '',
-        screenWidth: 408, screenHeight: 480, rect: true, round: false,
+        screenWidth: 408, screenHeight: 480, rect: false, round: false,
         card0Name: '', card0Phases: '', card0Border: BORDER_NORMAL,
         card1Name: '', card1Phases: '', card1Border: BORDER_NORMAL,
         card2Name: '', card2Phases: '', card2Border: BORDER_NORMAL,
@@ -36,15 +36,22 @@ export default {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
-        readScreen(device, function (screen) {
-            setIfChanged(vm, 'screenWidth', screen.width);
-            setIfChanged(vm, 'screenHeight', screen.height);
-            setIfChanged(vm, 'round', screen.round);
-            setIfChanged(vm, 'rect', !screen.round);
+        var screen = null;
+        // Раскладка показывается, когда известны и размер экрана, и настройки — без промежуточных перерисовок.
+        var ready = whenReady(2, function () {
+            vm.screenWidth = screen.width;
+            vm.screenHeight = screen.height;
+            vm.round = screen.round;
+            vm.rect = !screen.round;
+        });
+        readScreen(device, function (found) {
+            screen = found;
+            ready();
         });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
+            ready();
         });
     },
 

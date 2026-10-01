@@ -7,7 +7,7 @@ import device from '@system.device';
 import { AUTO_LANGUAGE, LANGUAGES, languageName, matchLocale } from '../../common/core/i18n.js';
 import { updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
+import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
 
 // Выбор языка: «Как в системе» и шесть языков. Выбор сохраняется и возвращает в настройки.
 // Выбранный пункт подсвечивается цветом через style: привязка данных в class на Lite не поддерживается.
@@ -28,6 +28,7 @@ var OPTION_CODES = [AUTO_LANGUAGE].concat(LANGUAGES.map(function (language) {
 var page = {
     data: {
         settingsJson: '',
+        ready: false,
         screenWidth: 408, screenHeight: 480,
         headWidth: 360, headTop: 24, titleWidth: 298,
         contentWidth: 360, listHeight: 368, nameWidth: 210, subWidth: 118,
@@ -45,15 +46,21 @@ var page = {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
+        // Страница показывается, когда известны размер экрана и настройки: без перерисовок на запуске.
+        var show = whenReady(2, function () {
+            vm.ready = true;
+        });
         readScreen(device, function (screen) {
             applyLayout(vm, listLayout(screen));
             // На круглом экране подписи «язык системы» справа нет места — имя языка шире.
             setIfChanged(vm, 'nameWidth', screen.round ? 242 : 210);
             setIfChanged(vm, 'subWidth', screen.round ? 0 : 118);
+            show();
         });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
+            show();
         });
     },
 

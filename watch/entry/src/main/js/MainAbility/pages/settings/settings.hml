@@ -1,11 +1,11 @@
 <div class="page" style="width: {{screenWidth}}; height: {{screenHeight}};" onswipe="onSwipe">
-    <div class="head" style="width: {{headWidth}}; margin-top: {{headTop}};">
+    <div class="head" show="{{ready}}" style="width: {{headWidth}}; margin-top: {{headTop}};">
         <div class="back" onclick="goBack">
             <text class="back-text">{{backGlyph}}</text>
         </div>
         <text class="title" style="width: {{titleWidth}};">{{title}}</text>
     </div>
-    <list class="list" ref="list" style="width: {{contentWidth}}; height: {{listHeight}};">
+    <list class="list" ref="list" show="{{ready}}" style="width: {{contentWidth}}; height: {{listHeight}};">
         <list-item class="item-two" onclick="openLanguage">
             <text class="label-wide">{{languageLabel}}</text>
             <text class="value">{{languageValue}}</text>

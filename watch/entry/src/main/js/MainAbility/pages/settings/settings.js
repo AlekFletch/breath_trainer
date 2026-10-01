@@ -7,7 +7,7 @@ import device from '@system.device';
 import { AUTO_LANGUAGE, languageName } from '../../common/core/i18n.js';
 import { settingValue, stepSetting, updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor } from '../../common/watch.js';
+import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
 
 // Настройки: язык, вибрация (вкл/выкл и сила: сильная или слабая ночная), длина сессии, фазы пресета «Своё». Список прокручивается колёсиком.
 // Пункта «Звук» нет: на часах звук недоступен (см. src/platform/lite.js).
@@ -26,6 +26,7 @@ var settings = null;
 var page = {
     data: {
         settingsJson: '',
+        ready: false,
         screenWidth: 408, screenHeight: 480,
         headWidth: 360, headTop: 24, titleWidth: 298,
         contentWidth: 360, listHeight: 368, switchLabelWidth: 280,
@@ -45,12 +46,18 @@ var page = {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
+        // Страница показывается, когда известны размер экрана и настройки: без перерисовок на запуске.
+        var show = whenReady(2, function () {
+            vm.ready = true;
+        });
         readScreen(device, function (screen) {
             applyLayout(vm, listLayout(screen));
+            show();
         });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
+            show();
         });
     },
 

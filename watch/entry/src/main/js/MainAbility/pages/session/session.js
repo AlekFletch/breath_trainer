@@ -9,7 +9,7 @@ import { createSession } from '../../common/core/session.js';
 import { ballScale, displaySecond, formatClock } from '../../common/core/view.js';
 import { normalizeSettings, phasesFor } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { navigate, readScreen, setIfChanged, translatorFor } from '../../common/watch.js';
+import { navigate, readScreen, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
 
 // Экран сессии: шарик, фаза, секунда, оставшееся время, прогресс.
 // Касание — пауза («II» вместо цифры) / продолжение цикла заново со вдоха.
@@ -32,6 +32,7 @@ var BALL_COLORS = {
 };
 
 var screen = null;
+var starter = null;
 var settings = null;
 var session = null;
 var t = null;
@@ -51,8 +52,8 @@ export default {
         ballRadius: 76,
         ballLeft: 128,
         ballTop: 164,
-        running: true,
-        counting: true,
+        running: false,
+        counting: false,
         paused: false,
         done: false,
         phaseLabel: '',
@@ -77,8 +78,16 @@ export default {
         this.statsCyclesLabel = t('stats.cycles');
         this.backHint = t('stats.backHint');
         var vm = this;
-        readScreen(device, function (screen) {
-            vm.placeLabels(screen);
+        // Сессия стартует и рисуется, когда известен размер экрана и страница готова: без перерисовок на запуске.
+        starter = whenReady(2, function () {
+            if (!session) return;
+            vm.running = true;
+            vm.counting = true;
+            session.start();
+        });
+        readScreen(device, function (found) {
+            vm.placeLabels(found);
+            starter();
         });
 
         session = createSession(toConfig(phasesFor(settings, settings.presetId), settings.sessionSec), platform, {
@@ -120,12 +129,13 @@ export default {
     },
 
     onReady: function () {
-        if (session) session.start();
+        if (starter) starter();
     },
 
     onDestroy: function () {
         if (session) session.stop();
         session = null;
+        starter = null;
     },
 
     renderFrame: function (state) {
