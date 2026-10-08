@@ -49,6 +49,8 @@ var page = {
         // Страница показывается, когда известны размер экрана и настройки: без перерисовок на запуске.
         var show = whenReady(2, function () {
             vm.ready = true;
+            // Фокус колёсика на скрытый список не ставится (onShow приходит раньше показа) — берём его здесь.
+            focusRotation(vm.$refs.list, true);
         });
         readScreen(device, function (screen) {
             applyLayout(vm, listLayout(screen));
