@@ -36,8 +36,11 @@ export function translatorFor(platform, settings) {
   return createTranslator(resolveLanguage(settings.language, platform.systemLocale()));
 }
 
-export function navigate(router, page, settings) {
-  router.replace({ uri: 'pages/' + page + '/' + page, params: { settingsJson: JSON.stringify(settings) } });
+// screen необязателен: с ним следующая страница знает размер экрана сразу, без ожидания getInfo (см. withScreen).
+export function navigate(router, page, settings, screen) {
+  var params = { settingsJson: JSON.stringify(settings) };
+  if (screen) params.screenJson = JSON.stringify(screen);
+  router.replace({ uri: 'pages/' + page + '/' + page, params: params });
 }
 
 // Список с фокусом колёсика нужно отпустить до ухода со страницы: иначе рантайм держит ссылку
@@ -90,6 +93,16 @@ export function readScreen(device, apply) {
   } catch (e) {
     once(RECT_SCREEN);
   }
+}
+
+// Экран из параметров перехода (screenJson), а если их нет — из readScreen. С параметрами apply вызывается
+// сразу, ещё в onInit: страница рисуется один раз уже с нужной раскладкой и ничего не прячет до готовности.
+export function withScreen(vm, device, apply) {
+  if (vm.screenJson) {
+    apply(JSON.parse(vm.screenJson));
+    return;
+  }
+  readScreen(device, apply);
 }
 
 // Размеры страниц со списком (настройки, язык): заголовок с «<» сверху, под ним список.

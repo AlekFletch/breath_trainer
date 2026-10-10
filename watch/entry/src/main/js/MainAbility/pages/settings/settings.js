@@ -7,7 +7,7 @@ import device from '@system.device';
 import { AUTO_LANGUAGE, languageName } from '../../common/core/i18n.js';
 import { settingValue, stepSetting, updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { applyLayout, focusRotation, listLayout, loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
+import { applyLayout, focusRotation, listLayout, loadSettings, navigate, saveSettings, setIfChanged, translatorFor, withScreen } from '../../common/watch.js';
 
 // Настройки: язык, вибрация (вкл/выкл и сила: сильная или слабая ночная), длина сессии, фазы пресета «Своё». Список прокручивается колёсиком.
 // Пункта «Звук» нет: на часах звук недоступен (см. src/platform/lite.js).
@@ -22,11 +22,12 @@ var STEP_FIELDS = [
 
 var platform = null;
 var settings = null;
+var screen = null;
 
 var page = {
     data: {
         settingsJson: '',
-        ready: false,
+        screenJson: '',
         screenWidth: 408, screenHeight: 480,
         headWidth: 360, headTop: 24, titleWidth: 298,
         contentWidth: 360, listHeight: 368, switchLabelWidth: 280,
@@ -46,20 +47,16 @@ var page = {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
-        // Страница показывается, когда известны размер экрана и настройки: без перерисовок на запуске.
-        var show = whenReady(2, function () {
-            vm.ready = true;
-            // Фокус колёсика на скрытый список не ставится (onShow приходит раньше показа) — берём его здесь.
-            focusRotation(vm.$refs.list, true);
-        });
-        readScreen(device, function (screen) {
+        // Экран и настройки приходят в параметрах перехода, поэтому оба применяются здесь же, до первой
+        // отрисовки: мерцания нет, и список ничем не прячется. Скрытый список (show="{{ready}}" в 1.0.5–1.0.6)
+        // на часах не получал фокус колёсика — модерация дважды вернула версию с «не адаптировано под колёсико».
+        withScreen(vm, device, function (found) {
+            screen = found;
             applyLayout(vm, listLayout(screen));
-            show();
         });
         loadSettings(vm, platform, function (loaded) {
             settings = loaded;
             vm.refresh();
-            show();
         });
     },
 
@@ -72,7 +69,7 @@ var page = {
 
     leave: function (target) {
         focusRotation(this.$refs.list, false);
-        navigate(router, target, settings);
+        navigate(router, target, settings, screen);
     },
 
     refresh: function () {

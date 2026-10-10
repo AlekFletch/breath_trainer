@@ -8,7 +8,7 @@ import device from '@system.device';
 import { PRESETS } from '../../common/core/presets.js';
 import { phasesFor, updateSettings } from '../../common/core/settings.js';
 import { createLitePlatform } from '../../common/platform/lite.js';
-import { loadSettings, navigate, readScreen, saveSettings, setIfChanged, translatorFor, whenReady } from '../../common/watch.js';
+import { loadSettings, navigate, saveSettings, setIfChanged, translatorFor, whenReady, withScreen } from '../../common/watch.js';
 
 // Главный экран: настройки, вибрация, четыре пресета, старт. Свайп вправо закрывает приложение.
 // Выбранный пресет подсвечивается рамкой через style: привязка данных в class на Lite не поддерживается.
@@ -19,10 +19,12 @@ var BORDER_NORMAL = '#1b1e26';
 
 var platform = null;
 var settings = null;
+var screen = null;
 
 export default {
     data: {
         settingsJson: '',
+        screenJson: '',
         screenWidth: 408, screenHeight: 480, rect: false, round: false,
         card0Name: '', card0Phases: '', card0Border: BORDER_NORMAL,
         card1Name: '', card1Phases: '', card1Border: BORDER_NORMAL,
@@ -36,7 +38,6 @@ export default {
     onInit: function () {
         platform = createLitePlatform({ vibrator: vibrator, brightness: brightness, storage: storage, configuration: configuration });
         var vm = this;
-        var screen = null;
         // Раскладка показывается, когда известны и размер экрана, и настройки — без промежуточных перерисовок.
         var ready = whenReady(2, function () {
             vm.screenWidth = screen.width;
@@ -44,7 +45,7 @@ export default {
             vm.round = screen.round;
             vm.rect = !screen.round;
         });
-        readScreen(device, function (found) {
+        withScreen(vm, device, function (found) {
             screen = found;
             ready();
         });
@@ -85,7 +86,8 @@ export default {
     },
 
     openSettings: function () {
-        navigate(router, 'settings', settings);
+        // Размер экрана — с собой: настройки рисуются сразу готовыми и список не прячется (иначе колёсико не работает).
+        navigate(router, 'settings', settings, screen);
     },
 
     start: function () {

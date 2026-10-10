@@ -41,3 +41,17 @@ test('страницы часов не объявляют метод render', ()
     assert.doesNotMatch(source, /^\s*render\s*[:(]/m, `pages/${page}: метод render затрётся шаблоном`);
   }
 });
+
+// Скрытый через show список не получает фокус колёсика на часах (1.0.5 и 1.0.6 отклонены модерацией:
+// «настройки не адаптированы под колёсико»). Список виден с первого кадра, экран приходит в параметрах перехода.
+test('список с колёсиком не прячется и получает экран из параметров перехода', () => {
+  for (const page of readdirSync(pagesDir)) {
+    const source = readFileSync(join(pagesDir, page, page + '.js'), 'utf8');
+    if (!/focusRotation/.test(source)) continue;
+    const markup = readFileSync(join(pagesDir, page, page + '.hml'), 'utf8');
+    const list = markup.match(/<list\b[^>]*>/)[0];
+    assert.doesNotMatch(list, /\bshow=|\bif=/, `pages/${page}: список прячется`);
+    assert.match(source, /withScreen\(/, `pages/${page}: экран не из параметров перехода`);
+    assert.match(source, /navigate\(router, target, settings, screen\)/, `pages/${page}: экран не передаётся дальше`);
+  }
+});
