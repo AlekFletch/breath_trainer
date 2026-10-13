@@ -60,15 +60,27 @@ export var KEYS = [
   'settings.strengthWeak',
   'settings.customSection',
   'common.on',
-  'common.off'
+  'common.off',
+  'home.series',
+  'series.breaths',
+  'series.untilTap',
+  'series.relax',
+  'series.rounds',
+  'series.unlimited',
+  'series.history',
+  'series.tapNext',
+  'stats.best',
+  'stats.avg',
+  'history.empty',
+  'stats.record'
 ];
 export var TEXTS = {
-  ru: 'Вдох|Задержка|Выдох|Задержка|4-7-8|Квадрат|Расслабление|Своё|Настройки|Вибро: вкл|Вибро: выкл|Старт|с|мин|Настройки|Вдох|Задержка (вдох)|Выдох|Задержка (выдох)|Сессия|Язык|Язык|Как в системе|Пауза|Готово|Циклов: {n}|Время|Циклы|Коснитесь для возврата|Звук: вкл|Звук: выкл|Звук|Вибрация|Сила вибрации|Сильная|Слабая (ночь)|Своё дыхание|Вкл|Выкл',
-  en: 'Inhale|Hold|Exhale|Hold|4-7-8|Box|Relax|Custom|Settings|Vibration: on|Vibration: off|Start|s|min|Settings|Inhale|Hold (full)|Exhale|Hold (empty)|Session|Language|Language|System default|Paused|Done|Cycles: {n}|Time|Cycles|Tap to go back|Sound: on|Sound: off|Sound|Vibration|Vibration strength|Strong|Weak (night)|Custom breathing|On|Off',
-  es: 'Inhalar|Retener|Exhalar|Retener|4-7-8|Cuadrada|Relajación|Personalizado|Ajustes|Vibración: sí|Vibración: no|Iniciar|s|min|Ajustes|Inhalar|Retener (lleno)|Exhalar|Retener (vacío)|Sesión|Idioma|Idioma|Como el sistema|En pausa|Listo|Ciclos: {n}|Tiempo|Ciclos|Toca para volver|Sonido: sí|Sonido: no|Sonido|Vibración|Intensidad|Fuerte|Suave (noche)|Respiración personalizada|Sí|No',
-  de: 'Einatmen|Halten|Ausatmen|Halten|4-7-8|Quadrat|Entspannung|Eigene|Einstellungen|Vibration: an|Vibration: aus|Start|s|min|Einstellungen|Einatmen|Halten (voll)|Ausatmen|Halten (leer)|Sitzung|Sprache|Sprache|Wie im System|Pausiert|Fertig|Zyklen: {n}|Zeit|Zyklen|Tippen für zurück|Ton: an|Ton: aus|Ton|Vibration|Vibrationsstärke|Stark|Schwach (Nacht)|Eigene Atmung|An|Aus',
-  fr: 'Inspirer|Retenir|Expirer|Retenir|4-7-8|Carrée|Détente|Personnalisé|Réglages|Vibration : oui|Vibration : non|Démarrer|s|min|Réglages|Inspirer|Retenir (plein)|Expirer|Retenir (vide)|Séance|Langue|Langue|Comme le système|En pause|Terminé|Cycles : {n}|Temps|Cycles|Touchez pour revenir|Son : oui|Son : non|Son|Vibration|Intensité|Forte|Faible (nuit)|Respiration personnalisée|Oui|Non',
-  zh: '吸气|屏息|呼气|屏息|4-7-8|箱式|放松|自定义|设置|振动：开|振动：关|开始|秒|分钟|设置|吸气|屏息（吸气后）|呼气|屏息（呼气后）|时长|语言|语言|跟随系统|已暂停|完成|循环：{n}|时间|循环|轻触返回|声音：开|声音：关|声音|振动|振动强度|强|弱（夜间）|自定义呼吸|开|关'
+  ru: 'Вдох|Задержка|Выдох|Задержка|4-7-8|Квадрат|Расслабление|Своё|Настройки|Вибро: вкл|Вибро: выкл|Старт|с|мин|Настройки|Вдох|Задержка (вдох)|Выдох|Задержка (выдох)|Сессия|Язык|Язык|Как в системе|Пауза|Готово|Циклов: {n}|Время|Циклы|Коснитесь для возврата|Звук: вкл|Звук: выкл|Звук|Вибрация|Сила вибрации|Сильная|Слабая (ночь)|Своё дыхание|Вкл|Выкл|Бутейко|Вдохов в серии|До касания|Расслабление|Раунды|Без ограничения|История|Коснитесь, чтобы продолжить|Лучшая задержка|Средняя|Пока нет тренировок|Рекорд!',
+  en: 'Inhale|Hold|Exhale|Hold|4-7-8|Box|Relax|Custom|Settings|Vibration: on|Vibration: off|Start|s|min|Settings|Inhale|Hold (full)|Exhale|Hold (empty)|Session|Language|Language|System default|Paused|Done|Cycles: {n}|Time|Cycles|Tap to go back|Sound: on|Sound: off|Sound|Vibration|Vibration strength|Strong|Weak (night)|Custom breathing|On|Off|Buteyko|Breaths per series|Until tap|Relax|Rounds|Unlimited|History|Tap to continue|Best hold|Average|No sessions yet|Record!',
+  es: 'Inhalar|Retener|Exhalar|Retener|4-7-8|Cuadrada|Relajación|Personalizado|Ajustes|Vibración: sí|Vibración: no|Iniciar|s|min|Ajustes|Inhalar|Retener (lleno)|Exhalar|Retener (vacío)|Sesión|Idioma|Idioma|Como el sistema|En pausa|Listo|Ciclos: {n}|Tiempo|Ciclos|Toca para volver|Sonido: sí|Sonido: no|Sonido|Vibración|Intensidad|Fuerte|Suave (noche)|Respiración personalizada|Sí|No|Buteyko|Respiraciones por serie|Hasta tocar|Relajación|Rondas|Sin límite|Historial|Toca para seguir|Mejor retención|Media|Aún no hay sesiones|¡Récord!',
+  de: 'Einatmen|Halten|Ausatmen|Halten|4-7-8|Quadrat|Entspannung|Eigene|Einstellungen|Vibration: an|Vibration: aus|Start|s|min|Einstellungen|Einatmen|Halten (voll)|Ausatmen|Halten (leer)|Sitzung|Sprache|Sprache|Wie im System|Pausiert|Fertig|Zyklen: {n}|Zeit|Zyklen|Tippen für zurück|Ton: an|Ton: aus|Ton|Vibration|Vibrationsstärke|Stark|Schwach (Nacht)|Eigene Atmung|An|Aus|Buteyko|Atemzüge pro Serie|Bis zum Tippen|Entspannung|Runden|Unbegrenzt|Verlauf|Tippen für weiter|Längste Pause|Schnitt|Noch keine Sitzungen|Rekord!',
+  fr: 'Inspirer|Retenir|Expirer|Retenir|4-7-8|Carrée|Détente|Personnalisé|Réglages|Vibration : oui|Vibration : non|Démarrer|s|min|Réglages|Inspirer|Retenir (plein)|Expirer|Retenir (vide)|Séance|Langue|Langue|Comme le système|En pause|Terminé|Cycles : {n}|Temps|Cycles|Touchez pour revenir|Son : oui|Son : non|Son|Vibration|Intensité|Forte|Faible (nuit)|Respiration personnalisée|Oui|Non|Buteyko|Respirations par série|Au toucher|Détente|Tours|Illimité|Historique|Touchez pour continuer|Meilleure rétention|Moyenne|Aucune séance|Record !',
+  zh: '吸气|屏息|呼气|屏息|4-7-8|箱式|放松|自定义|设置|振动：开|振动：关|开始|秒|分钟|设置|吸气|屏息（吸气后）|呼气|屏息（呼气后）|时长|语言|语言|跟随系统|已暂停|完成|循环：{n}|时间|循环|轻触返回|声音：开|声音：关|声音|振动|振动强度|强|弱（夜间）|自定义呼吸|开|关|布泰科|每组呼吸次数|轻触结束|放松|轮数|不限|历史|轻触继续|最长屏息|平均|暂无记录|新纪录！'
 };
 
 export function isSupported(code) {

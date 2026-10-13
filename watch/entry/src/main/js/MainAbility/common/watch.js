@@ -37,9 +37,13 @@ export function translatorFor(platform, settings) {
 }
 
 // screen необязателен: с ним следующая страница знает размер экрана сразу, без ожидания getInfo (см. withScreen).
-export function navigate(router, page, settings, screen) {
+// extra — дополнительные параметры перехода (строки), например задержки для итогов серии.
+export function navigate(router, page, settings, screen, extra) {
   var params = { settingsJson: JSON.stringify(settings) };
   if (screen) params.screenJson = JSON.stringify(screen);
+  for (var key in extra) {
+    if (Object.prototype.hasOwnProperty.call(extra, key)) params[key] = extra[key];
+  }
   router.replace({ uri: 'pages/' + page + '/' + page, params: params });
 }
 

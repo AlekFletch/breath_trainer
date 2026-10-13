@@ -5,9 +5,11 @@
 //   задержка после выдоха   — один короткий импульс на каждой секунде
 //   выдох                   — тишина
 //   конец сессии            — длинный импульс
+//   расслабление (series.js) — тишина, на последней секунде — короткий импульс: пора дышать
+//   сигнал cue (series.js)  — свой импульс поверх рисунка: 'double' — дальше задержка, 'long' — задержка кончилась
 // Слабый (ночной) режим: вдох — один импульс на его последней секунде (вдох на 4 секунды — импульс на 4-й секунде, в момент t=3 с), задержка после вдоха — только на последней секунде,
 // последняя секунда выдоха и задержки после выдоха — один импульс (сигнал: пора вдыхать),
-// конец сессии — короткий импульс. Вибромотор часов силу не регулирует,
+// конец сессии и сигналы cue — короткий импульс. Вибромотор часов силу не регулирует,
 // поэтому «слабее» здесь значит реже и короче.
 // За кадр — не больше одного импульса: после подвисания пропущенные тики сливаются в один, а не идут очередью.
 
@@ -30,16 +32,20 @@ export function createHaptics(options) {
     var events = result.events;
     var state = result.state;
     var pulse = null;
+    var cue = null;
 
     for (var i = 0; i < events.length; i++) {
       var event = events[i];
       if (event.type === 'end') return weak ? 'short' : 'long';
+      if (event.type === 'cue') cue = weak ? 'short' : event.mode;
       if (weak && event.type === 'secondTick' && event.phase === 'inhale' && event.last) pulse = 'short';
       if (event.type === 'secondTick' && event.phase === 'holdIn') {
         if (!weak) pulse = event.last ? 'double' : 'short';
         else if (event.last) pulse = 'short';
       } else if (event.type === 'secondTick' && event.phase === 'holdOut') {
         if (!weak || event.last) pulse = 'short';
+      } else if (event.type === 'secondTick' && event.phase === 'relax' && event.last) {
+        pulse = 'short';
       } else if (weak && event.type === 'secondTick' && event.phase === 'exhale' && event.last) {
         pulse = 'short';
       }
@@ -53,7 +59,7 @@ export function createHaptics(options) {
         pulse = 'short';
       }
     }
-    return pulse;
+    return cue || pulse;
   }
 
   return {

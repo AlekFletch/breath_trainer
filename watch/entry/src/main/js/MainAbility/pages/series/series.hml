@@ -1,0 +1,67 @@
+<div class="page" style="width: {{screenWidth}}; height: {{screenHeight}};" onswipe="onSwipe">
+    <div class="head" style="width: {{headWidth}}; margin-top: {{headTop}};">
+        <div class="back" onclick="goBack">
+            <text class="back-text">{{backGlyph}}</text>
+        </div>
+        <text class="title" style="width: {{titleWidth}};">{{title}}</text>
+    </div>
+    <list class="list" ref="list" style="width: {{contentWidth}}; height: {{listHeight}};">
+        <list-item class="item-start" onclick="start">
+            <div class="start" style="width: {{contentWidth}};">
+                <text class="start-text">{{startLabel}}</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{breathsLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="breathsMinus">-</text>
+                <text class="number">{{breathsValue}}</text>
+                <text class="step" onclick="breathsPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{inhaleLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="inhaleMinus">-</text>
+                <text class="number">{{inhaleValue}}</text>
+                <text class="step" onclick="inhalePlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{exhaleLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="exhaleMinus">-</text>
+                <text class="number">{{exhaleValue}}</text>
+                <text class="step" onclick="exhalePlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{holdLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="holdMinus">-</text>
+                <text class="number">{{holdValue}}</text>
+                <text class="step" onclick="holdPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{relaxLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="relaxMinus">-</text>
+                <text class="number">{{relaxValue}}</text>
+                <text class="step" onclick="relaxPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item-step">
+            <text class="label-wide">{{roundsLabel}}</text>
+            <div class="stepper" style="width: {{contentWidth}};">
+                <text class="step" onclick="roundsMinus">-</text>
+                <text class="number">{{roundsValue}}</text>
+                <text class="step" onclick="roundsPlus">+</text>
+            </div>
+        </list-item>
+        <list-item class="item" onclick="openHistory">
+            <text class="label-wide" style="width: {{switchLabelWidth}};">{{historyLabel}}</text>
+            <text class="chevron">></text>
+        </list-item>
+    </list>
+</div>

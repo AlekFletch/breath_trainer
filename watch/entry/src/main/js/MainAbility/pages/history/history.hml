@@ -1,0 +1,17 @@
+<div class="page" style="width: {{screenWidth}}; height: {{screenHeight}};" onswipe="onSwipe">
+    <div class="head" style="width: {{headWidth}}; margin-top: {{headTop}};">
+        <div class="back" onclick="goBack">
+            <text class="back-text">{{backGlyph}}</text>
+        </div>
+        <text class="title" style="width: {{titleWidth}};">{{title}}</text>
+    </div>
+    <list class="list" ref="list" style="width: {{contentWidth}}; height: {{listHeight}};">
+        <list-item class="item-head" style="width: {{contentWidth}};">
+            <text class="columns" style="width: {{contentWidth}};">{{columns}}</text>
+        </list-item>
+        <list-item class="item" for="{{rows}}" style="width: {{contentWidth}};">
+            <text class="day">{{$item.day}}</text>
+            <text class="holds">{{$item.holds}}</text>
+        </list-item>
+    </list>
+</div>

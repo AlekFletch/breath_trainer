@@ -63,7 +63,11 @@
           "pages/index/index",
           "pages/session/session",
           "pages/settings/settings",
-          "pages/language/language"
+          "pages/language/language",
+          "pages/series/series",
+          "pages/seriesrun/seriesrun",
+          "pages/seriesdone/seriesdone",
+          "pages/history/history"
         ],
         "name": ".MainAbility"
       }

@@ -1,0 +1,66 @@
+/* Как session.css: размер сцены и положение подписей задаёт seriesrun.js по реальному экрану. */
+.stage {
+  width: 408px;
+  height: 480px;
+  background-color: #000000;
+}
+.ball {
+  left: 128px;
+  top: 164px;
+  width: 153px;
+  height: 153px;
+  border-radius: 76px;
+  background-color: #3cc9bb;
+}
+.phase {
+  left: 28px;
+  top: 22px;
+  width: 220px;
+  height: 40px;
+  font-size: 30px;
+  color: #e8eaf0;
+}
+.time {
+  left: 240px;
+  top: 22px;
+  width: 140px;
+  height: 40px;
+  font-size: 30px;
+  text-align: right;
+  color: #9aa3b5;
+}
+.counter {
+  left: 0px;
+  top: 200px;
+  width: 408px;
+  height: 80px;
+  font-size: 64px;
+  text-align: center;
+  color: #ffffff;
+}
+/* Значок паузы «II» — две полосы по центру шарика */
+.pause-bar {
+  top: 208px;
+  width: 18px;
+  height: 64px;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+.progress {
+  left: 28px;
+  top: 436px;
+  width: 352px;
+  height: 10px;
+  color: #4fd1c5;
+  stroke-width: 6px;
+}
+/* Подсказка на задержке «до касания» — на месте полосы прогресса */
+.hint {
+  left: 28px;
+  top: 426px;
+  width: 352px;
+  height: 30px;
+  font-size: 22px;
+  text-align: center;
+  color: #9aa3b5;
+}

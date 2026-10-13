@@ -17,7 +17,8 @@ test('по умолчанию: 4-7-8, 5 минут, вибрация вкл, з�
     vibrationStrength: 'strong',
     sound: false,
     language: 'auto',
-    custom: { inhale: 5, holdIn: 2, exhale: 5, holdOut: 2 }
+    custom: { inhale: 5, holdIn: 2, exhale: 5, holdOut: 2 },
+    series: { breaths: 10, inhale: 15, exhale: 15, hold: 0, relax: 30, rounds: 3 }
   });
 });
 
@@ -46,7 +47,8 @@ test('корректные поля сохраняются, некорректн
     vibrationStrength: 'strong',
     sound: true,
     language: 'de',
-    custom: { inhale: 3, holdIn: 0, exhale: 6, holdOut: 0 }
+    custom: { inhale: 3, holdIn: 0, exhale: 6, holdOut: 0 },
+    series: defaultSettings().series
   });
 
   assert.equal(normalizeSettings({ presetId: 'nope' }).presetId, '478');

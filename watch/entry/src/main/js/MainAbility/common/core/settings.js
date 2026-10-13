@@ -10,8 +10,9 @@ export var SETTINGS_KEY = 'breath.settings';
 
 // Хранилище часов (@system.storage, Lite Wearable) принимает значение не длиннее 128 байт, а JSON настроек
 // весит ~140 — запись молча проваливалась. Поэтому в хранилище идёт короткая строка вида
-// 'b1;478;5;1;0;auto;4,7,8,0;s' (пресет; минуты; вибрация; звук; язык; вдох,задержка,выдох,задержка; сила вибрации s/w).
-// Строка без последнего поля (старые сохранения) читается как сильная вибрация.
+// 'b1;478;5;1;0;auto;4,7,8,0;s;10,15,15,0,15,3' (пресет; минуты; вибрация; звук; язык; вдох,задержка,выдох,задержка;
+// сила вибрации s/w; серии — поля SERIES_FIELDS через запятую).
+// Старые сохранения без последних полей читаются как сильная вибрация и серии по умолчанию.
 var COMPACT_PREFIX = 'b1';
 export var VIBRATION_STRENGTHS = ['strong', 'weak'];
 
@@ -23,6 +24,34 @@ export var LIMITS = {
   exhale: { min: 0, max: 60 },
   holdOut: { min: 0, max: 60 }
 };
+
+// Тренировка «Бутейко» (series.js): допустимые значения каждого поля по порядку — «−/+» переходят к соседнему.
+// Вдох и выдох — в десятых долях секунды (шаг 0,5 с); hold 0 — «до касания»; relax 0 — без расслабления;
+// rounds 0 — без ограничения, стоит после 10. Списки строятся по запросу: постоянные массивы
+// лежали бы в куче каждой страницы (на часах 100 КБ).
+export var SERIES_FIELDS = ['breaths', 'inhale', 'exhale', 'hold', 'relax', 'rounds'];
+
+function range(from, to, step) {
+  var out = [];
+  for (var v = from; v <= to; v += step) out.push(v);
+  return out;
+}
+
+export function seriesOptions(key) {
+  switch (key) {
+    case 'breaths': return range(3, 30, 1);
+    case 'inhale':
+    case 'exhale': return range(5, 50, 5);
+    case 'hold': return [0].concat(range(5, 180, 5));
+    case 'relax': return range(0, 180, 5);
+    case 'rounds': return range(1, 10, 1).concat([0]);
+    default: return null;
+  }
+}
+
+function defaultSeries() {
+  return { breaths: 10, inhale: 15, exhale: 15, hold: 0, relax: 30, rounds: 3 };
+}
 
 function hasOwn(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
@@ -41,7 +70,8 @@ export function defaultSettings() {
     vibrationStrength: 'strong',
     sound: false,
     language: AUTO_LANGUAGE,
-    custom: { inhale: custom.inhale, holdIn: custom.holdIn, exhale: custom.exhale, holdOut: custom.holdOut }
+    custom: { inhale: custom.inhale, holdIn: custom.holdIn, exhale: custom.exhale, holdOut: custom.holdOut },
+    series: defaultSeries()
   };
 }
 
@@ -56,16 +86,25 @@ export function encodeSettings(settings) {
     s.sound ? 1 : 0,
     s.language,
     [c.inhale, c.holdIn, c.exhale, c.holdOut].join(','),
-    s.vibrationStrength === 'weak' ? 'w' : 's'
+    s.vibrationStrength === 'weak' ? 'w' : 's',
+    SERIES_FIELDS.map(function (key) {
+      return s.series[key];
+    }).join(',')
   ].join(';');
 }
 
 function decodeCompact(text) {
   var f = text.split(';');
-  if ((f.length !== 7 && f.length !== 8) || f[0] !== COMPACT_PREFIX) return null;
+  if (f.length < 7 || f.length > 9 || f[0] !== COMPACT_PREFIX) return null;
   var phases = f[6].split(',');
   var custom = {};
   for (var i = 0; i < PHASES.length; i++) custom[PHASES[i]] = Number(phases[i]);
+  var series = null;
+  if (f.length === 9) {
+    var values = f[8].split(',');
+    series = {};
+    for (var j = 0; j < SERIES_FIELDS.length; j++) series[SERIES_FIELDS[j]] = Number(values[j]);
+  }
   return {
     presetId: f[1],
     sessionSec: Number(f[2]) * 60,
@@ -73,7 +112,8 @@ function decodeCompact(text) {
     vibrationStrength: f[7] === 'w' ? 'weak' : 'strong',
     sound: f[4] === '1',
     language: f[5],
-    custom: custom
+    custom: custom,
+    series: series
   };
 }
 
@@ -114,6 +154,19 @@ export function normalizeSettings(raw) {
     }
     if (custom && total > 0) settings.custom = custom;
   }
+
+  if (source.series && typeof source.series === 'object') {
+    var series = {};
+    for (var j = 0; j < SERIES_FIELDS.length; j++) {
+      var key = SERIES_FIELDS[j];
+      if (seriesOptions(key).indexOf(source.series[key]) < 0) {
+        series = null;
+        break;
+      }
+      series[key] = source.series[key];
+    }
+    if (series) settings.series = series;
+  }
   return settings;
 }
 
@@ -135,6 +188,10 @@ export function updateSettings(settings, patch) {
       for (var i = 0; i < PHASES.length; i++) {
         if (hasOwn(patch.custom, PHASES[i])) next.custom[PHASES[i]] = patch.custom[PHASES[i]];
       }
+    } else if (key === 'series') {
+      for (var j = 0; j < SERIES_FIELDS.length; j++) {
+        if (hasOwn(patch.series, SERIES_FIELDS[j])) next.series[SERIES_FIELDS[j]] = patch.series[SERIES_FIELDS[j]];
+      }
     } else {
       next[key] = patch[key];
     }
@@ -153,4 +210,28 @@ export function stepSetting(settings, key, delta) {
   var custom = {};
   custom[key] = value;
   return updateSettings(settings, { custom: custom, presetId: 'custom' });
+}
+
+// «−/+» в настройках серии: соседнее значение из seriesOptions, на краях — без изменений.
+export function stepSeries(settings, key, delta) {
+  var options = seriesOptions(key);
+  if (!options) return settings;
+  var at = options.indexOf(settings.series[key]) + delta;
+  if (at < 0 || at >= options.length) return settings;
+  var patch = {};
+  patch[key] = options[at];
+  return updateSettings(settings, { series: patch });
+}
+
+// Конфигурация для createSeriesEngine: вдох и выдох — из десятых долей в секунды.
+export function seriesConfig(settings) {
+  var s = settings.series;
+  return {
+    breaths: s.breaths,
+    inhale: s.inhale / 10,
+    exhale: s.exhale / 10,
+    hold: s.hold,
+    relax: s.relax,
+    rounds: s.rounds
+  };
 }

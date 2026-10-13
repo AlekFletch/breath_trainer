@@ -1,0 +1,12 @@
+<div class="stats" style="width: {{screenWidth}}; height: {{screenHeight}};" onclick="onTap" onswipe="onSwipe">
+    <text class="stats-title">{{doneLabel}}</text>
+    <div class="stats-card">
+        <text class="stats-value">{{statsBest}}</text>
+        <text class="stats-label">{{statsBestLabel}}</text>
+        <div class="stats-divider"></div>
+        <text class="stats-value">{{statsAvg}}</text>
+        <text class="stats-label">{{statsAvgLabel}}</text>
+    </div>
+    <text class="stats-holds">{{statsHolds}}</text>
+    <text class="stats-hint">{{backHint}}</text>
+</div>
